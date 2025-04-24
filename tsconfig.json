@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@shared/*": ["./node_modules/podman-desktop-extension-ai-lab-shared/src/*"],
+    }
+  }
+}

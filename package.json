@@ -2,13 +2,17 @@
   "name": "podman-desktop-extension-ai-lab-tools",
   "version": "0.0.0",
   "main": "index.js",
-  "scripts": {
-    "start-proxy": "node src/proxy-server.mjs"
-  },
+  "type": "module",
   "author": "Marc Nuri",
   "license": "Apache-2.0",
   "dependencies": {
     "express": "5.1.0",
-    "http-proxy-middleware": "3.0.5"
+    "http-proxy-middleware": "3.0.5",
+    "podman-desktop-extension-ai-lab-backend": "file://~/00-MN/projects/forks/podman-desktop-extension-ai-lab/packages/backend",
+    "podman-desktop-extension-ai-lab-shared": "file://~/00-MN/projects/forks/podman-desktop-extension-ai-lab/packages/shared"
+  },
+  "devDependencies": {
+    "@podman-desktop/api": "1.18.0",
+    "vitest": "3.1.2"
   }
 }
