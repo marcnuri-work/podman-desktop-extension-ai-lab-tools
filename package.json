@@ -1,0 +1,14 @@
+{
+  "name": "podman-desktop-extension-ai-lab-tools",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start-proxy": "node src/proxy-server.mjs"
+  },
+  "author": "Marc Nuri",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "5.1.0",
+    "http-proxy-middleware": "3.0.5"
+  }
+}
