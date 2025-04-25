@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@ai-sdk/openai-compatible':
+        specifier: 0.2.13
+        version: 0.2.13(zod@3.24.3)
+      ai:
+        specifier: 4.3.9
+        version: 4.3.9(react@19.1.0)(zod@3.24.3)
       express:
         specifier: 5.1.0
         version: 5.1.0

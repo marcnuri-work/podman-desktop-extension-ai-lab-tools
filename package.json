@@ -6,6 +6,8 @@
   "author": "Marc Nuri",
   "license": "Apache-2.0",
   "dependencies": {
+    "@ai-sdk/openai-compatible": "0.2.13",
+    "ai": "4.3.9",
     "express": "5.1.0",
     "http-proxy-middleware": "3.0.5",
     "podman-desktop-extension-ai-lab-backend": "file://~/00-MN/projects/forks/podman-desktop-extension-ai-lab/packages/backend",
