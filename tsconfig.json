@@ -1,7 +1,27 @@
 {
   "compilerOptions": {
+    "allowArbitraryExtensions": true,
     "paths": {
+      "/@/*": [
+        "./node_modules/podman-desktop-extension-ai-lab-backend/src/*",
+        "./node_modules/podman-desktop-extension-ai-lab-frontend/src/*"
+      ],
       "@shared/*": ["./node_modules/podman-desktop-extension-ai-lab-shared/src/*"],
     }
-  }
+  },
+  "include": [
+    "**/*.svelte",
+    "src/**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.svelte",
+    "../../types/**/*.d.ts",
+    "node_modules/podman-desktop-extension-ai-lab-backend/**/*.ts",
+    "node_modules/podman-desktop-extension-ai-lab-backend/**/*.d.ts",
+    "node_modules/podman-desktop-extension-ai-lab-frontend/**/*.ts",
+    "node_modules/podman-desktop-extension-ai-lab-frontend/**/*.d.ts",
+    "node_modules/podman-desktop-extension-ai-lab-frontend/**/*.svelte",
+    "node_modules/podman-desktop-extension-ai-lab-shared/**/*.ts",
+    "node_modules/podman-desktop-extension-ai-lab-shared/**/*.d.ts"
+  ]
 }
