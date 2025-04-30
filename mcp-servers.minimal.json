@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "time": {
+      "enabled": false,
+      "type": "stdio",
+      "command": "podman",
+      "args": ["run", "-i", "--rm", "mcp/time"]
+    }
+  }
+}

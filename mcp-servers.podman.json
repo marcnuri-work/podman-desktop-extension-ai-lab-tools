@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "podman-mcp-server": {
+      "enabled": false,
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "podman-mcp-server@latest"]
+    }
+  }
+}
