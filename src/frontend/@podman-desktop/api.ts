@@ -2,6 +2,7 @@ import { getCatalog } from './catalogs';
 import { getInferenceServers } from './inference-servers';
 import { getModelsInfo } from './models';
 import { getPlaygroundConversations } from './playgrounds';
+import { getTasks } from './tasks';
 
 const functions = {
   getCatalog,
@@ -9,6 +10,7 @@ const functions = {
   getModelsInfo,
   getPlaygroundConversations,
   getPodmanDesktopVersion: () => version,
+  getTasks,
   readRoute: () => getState()['url'],
 };
 
