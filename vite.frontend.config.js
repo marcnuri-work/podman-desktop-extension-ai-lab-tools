@@ -43,9 +43,18 @@ export default defineConfig({
     },
   },
   plugins: [ svelte({ hot: !process.env.VITEST }), tailwindcss()],
+  optimizeDeps: {
+    exclude: [],
+    noDiscovery: true
+  },
   server: {
     fs: {
       strict: true,
+      allow: [
+        '.',
+        '/home/user/00-MN/projects/forks/podman-desktop-extension-ai-lab'
+      ]
+
     },
   },
   build: {
