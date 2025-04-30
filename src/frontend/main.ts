@@ -4,7 +4,7 @@ import './styles/tailwind.css';
 
 const target = document.getElementById('app');
 
-let app;
+let app: { $set?: any; $on?: any };
 if (target) {
   app = mount(App, { target });
 }

@@ -32,7 +32,7 @@ export const postMessage = args => {
         console.error(e);
       }
     }
-    event.data = {
+    event['data'] = {
       id: args.id,
       channel: args.channel,
       status: 'OK',
