@@ -6,6 +6,7 @@
   "author": "Marc Nuri",
   "license": "Apache-2.0",
   "scripts": {
+    "format:fix": "prettier --config ./node_modules/podman-desktop-extension-ai-lab-parent/.prettierrc --write \"**/src/**/*.{ts,svelte}\"",
     "frontend:watch": "vite -c vite.frontend.config.js"
   },
   "dependencies": {
@@ -15,7 +16,8 @@
     "http-proxy-middleware": "3.0.5",
     "podman-desktop-extension-ai-lab-backend": "link://~/00-MN/projects/forks/podman-desktop-extension-ai-lab/packages/backend",
     "podman-desktop-extension-ai-lab-frontend": "link://~/00-MN/projects/forks/podman-desktop-extension-ai-lab/packages/frontend",
-    "podman-desktop-extension-ai-lab-shared": "link://~/00-MN/projects/forks/podman-desktop-extension-ai-lab/packages/shared"
+    "podman-desktop-extension-ai-lab-shared": "link://~/00-MN/projects/forks/podman-desktop-extension-ai-lab/packages/shared",
+    "podman-desktop-extension-ai-lab-parent": "link://~/00-MN/projects/forks/podman-desktop-extension-ai-lab/"
   },
   "devDependencies": {
     "@podman-desktop/api": "1.18.0",
@@ -23,6 +25,8 @@
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.4",
     "@tsconfig/svelte": "^5.0.4",
+    "prettier": "^3.5.3",
+    "prettier-plugin-svelte": "^3.3.3",
     "svelte": "5.28.2",
     "tailwindcss": "^4.1.4",
     "vite": "6.3.3",

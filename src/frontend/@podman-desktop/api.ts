@@ -1,4 +1,16 @@
-import {getModelsInfo} from "./models";
+import {getCatalog} from './catalogs';
+import {getInferenceServers} from './inference-servers';
+import {getModelsInfo} from './models';
+import {getPlaygroundConversations} from './playgrounds';
+
+const functions = {
+  getCatalog,
+  getInferenceServers,
+  getModelsInfo,
+  getPlaygroundConversations,
+  getPodmanDesktopVersion: () => version,
+  readRoute: () => getState()['url']
+};
 
 export const commands = {};
 export const configuration = {};
@@ -12,8 +24,13 @@ export const postMessage = args => {
   setTimeout(() => {
     const event = new Event('message');
     let body = {};
-    if (args.method === 'getModelsInfo') {
-      body = getModelsInfo();
+    const f = functions[args.method];
+    if (f) {
+      try {
+        body = f(args);
+      } catch (e) {
+        console.error(e);
+      }
     }
     event.data = {
       id: args.id,
@@ -26,9 +43,19 @@ export const postMessage = args => {
 };
 export const process = {};
 export const provider = {};
+export const getState = () => {
+  console.log('getState');
+  const state = sessionStorage.getItem('podman-state');
+  if (state) {
+    return JSON.parse(state);
+  }
+  return {};
+}
+export const setState = args => {
+  console.log('setState', args);
+  sessionStorage.setItem('podman-state', JSON.stringify(args));
+};
 export const version = '1.33.7';
-
-// export const window = {};
 
 export class CancellationTokenSource {
   token: object;

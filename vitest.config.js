@@ -17,7 +17,7 @@
  ***********************************************************************/
 
 import path from 'node:path';
-import { join } from 'path';
+import { join } from 'node:path';
 
 const AI_LAB_BACKEND = path.resolve(__dirname, 'node_modules', 'podman-desktop-extension-ai-lab-backend');
 const AI_LAB_SHARED = path.resolve(__dirname, 'node_modules', 'podman-desktop-extension-ai-lab-shared');

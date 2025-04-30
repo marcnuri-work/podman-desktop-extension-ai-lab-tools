@@ -3,6 +3,6 @@ import { InferenceType } from '@shared/models/IInference';
 
 export const getModelsInfo: Array<ModelInfo> = () => {
   return [
-    {id: 'a-model', file: 'file', name: 'A model!', backend: InferenceType.LLAMA_CPP}
-  ]
+    {id: 'model-1', file: 'file', name: 'Model Number 1', backend: InferenceType.LLAMA_CPP}
+  ];
 };

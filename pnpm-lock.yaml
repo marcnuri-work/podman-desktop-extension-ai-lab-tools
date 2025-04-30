@@ -26,6 +26,9 @@ importers:
       podman-desktop-extension-ai-lab-frontend:
         specifier: link://~/00-MN/projects/forks/podman-desktop-extension-ai-lab/packages/frontend
         version: link:../../forks/podman-desktop-extension-ai-lab/packages/frontend
+      podman-desktop-extension-ai-lab-parent:
+        specifier: link://~/00-MN/projects/forks/podman-desktop-extension-ai-lab/
+        version: link:../../forks/podman-desktop-extension-ai-lab
       podman-desktop-extension-ai-lab-shared:
         specifier: link://~/00-MN/projects/forks/podman-desktop-extension-ai-lab/packages/shared
         version: link:../../forks/podman-desktop-extension-ai-lab/packages/shared
@@ -45,6 +48,12 @@ importers:
       '@tsconfig/svelte':
         specifier: ^5.0.4
         version: 5.0.4
+      prettier:
+        specifier: ^3.5.3
+        version: 3.5.3
+      prettier-plugin-svelte:
+        specifier: ^3.3.3
+        version: 3.3.3(prettier@3.5.3)(svelte@5.28.2)
       svelte:
         specifier: 5.28.2
         version: 5.28.2
@@ -1003,6 +1012,17 @@ packages:
   postcss@8.5.3:
     resolution: {integrity: sha512-dle9A3yYxlBSrt8Fu+IpjGT8SY8hN0mlaA6GY8t0P5PjIOZemULz/E2Bnm/2dcUOena75OTNkHI76uZBNUUq3A==}
     engines: {node: ^10 || ^12 || >=14}
+
+  prettier-plugin-svelte@3.3.3:
+    resolution: {integrity: sha512-yViK9zqQ+H2qZD1w/bH7W8i+bVfKrD8GIFjkFe4Thl6kCT9SlAsXVNmt3jCvQOCsnOhcvYgsoVlRV/Eu6x5nNw==}
+    peerDependencies:
+      prettier: ^3.0.0
+      svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
+
+  prettier@3.5.3:
+    resolution: {integrity: sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==}
+    engines: {node: '>=14'}
+    hasBin: true
 
   proxy-addr@2.0.7:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}
@@ -2053,6 +2073,13 @@ snapshots:
       nanoid: 3.3.11
       picocolors: 1.1.1
       source-map-js: 1.2.1
+
+  prettier-plugin-svelte@3.3.3(prettier@3.5.3)(svelte@5.28.2):
+    dependencies:
+      prettier: 3.5.3
+      svelte: 5.28.2
+
+  prettier@3.5.3: {}
 
   proxy-addr@2.0.7:
     dependencies:
