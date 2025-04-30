@@ -1,7 +1,7 @@
-import {getCatalog} from './catalogs';
-import {getInferenceServers} from './inference-servers';
-import {getModelsInfo} from './models';
-import {getPlaygroundConversations} from './playgrounds';
+import { getCatalog } from './catalogs';
+import { getInferenceServers } from './inference-servers';
+import { getModelsInfo } from './models';
+import { getPlaygroundConversations } from './playgrounds';
 
 const functions = {
   getCatalog,
@@ -9,7 +9,7 @@ const functions = {
   getModelsInfo,
   getPlaygroundConversations,
   getPodmanDesktopVersion: () => version,
-  readRoute: () => getState()['url']
+  readRoute: () => getState()['url'],
 };
 
 export const commands = {};
@@ -36,7 +36,7 @@ export const postMessage = args => {
       id: args.id,
       channel: args.channel,
       status: 'OK',
-      body
+      body,
     };
     window.dispatchEvent(event);
   }, 100);
@@ -50,7 +50,7 @@ export const getState = () => {
     return JSON.parse(state);
   }
   return {};
-}
+};
 export const setState = args => {
   console.log('setState', args);
   sessionStorage.setItem('podman-state', JSON.stringify(args));
@@ -62,8 +62,7 @@ export class CancellationTokenSource {
 
   constructor() {
     this.token = {
-      onCancellationRequested: () => {
-      },
+      onCancellationRequested: () => {},
     };
   }
 }
