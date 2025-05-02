@@ -1,22 +1,26 @@
 import express from 'express';
 import {createProxyMiddleware} from 'http-proxy-middleware';
 
-const PORT = process.env.PORT || 3000;
-const TARGET_URL = process.env.TARGET_URL || 'http://192.168.5.12:11434';
+const DEFAULT_PORT = 3000;
 
-export const startServer = () => {
+const DEFAULT_TARGET_URL = 'http://192.168.5.12:11434';
+
+export const startServer = ({
+  port = DEFAULT_PORT,
+  targetUrl = DEFAULT_TARGET_URL
+} = {}) => {
   const app = express();
   const proxyOptions = {
-    target: TARGET_URL,
+    target: targetUrl,
     changeOrigin: true,
     logLevel: 'debug'
   };
 
   app.use('/', createProxyMiddleware(proxyOptions));
 
-  const server = app.listen(PORT, () => {
-    console.log(`Reverse proxy server started on port ${PORT}`);
-    console.log(`Forwarding requests to: ${TARGET_URL}`);
+  const server = app.listen(port, () => {
+    console.log(`Reverse proxy server started on port ${port}`);
+    console.log(`Forwarding requests to: ${targetUrl}`);
   });
 
   process.on('SIGINT', () => {
