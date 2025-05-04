@@ -7,7 +7,8 @@
   "license": "Apache-2.0",
   "scripts": {
     "format:fix": "prettier --config ./node_modules/podman-desktop-extension-ai-lab-parent/.prettierrc --write \"**/src/**/*.{ts,svelte}\"",
-    "frontend:watch": "vite -c vite.frontend.config.js"
+    "frontend:watch": "vite -c vite.frontend.config.js",
+    "start": "tsx src/server-runner.ts"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "0.2.13",
@@ -29,6 +30,7 @@
     "prettier-plugin-svelte": "^3.3.3",
     "svelte": "5.28.2",
     "tailwindcss": "^4.1.4",
+    "tsx": "4.19.4",
     "vite": "6.3.3",
     "vitest": "3.1.2"
   }
