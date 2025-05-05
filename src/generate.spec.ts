@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, test } from 'vitest';
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { generateText, simulateStreamingMiddleware, streamText, wrapLanguageModel } from 'ai';
-import { startServer } from './proxy-server.mjs';
+import { startServer } from './proxy-server';
 import {
   McpClient,
   McpServer,
