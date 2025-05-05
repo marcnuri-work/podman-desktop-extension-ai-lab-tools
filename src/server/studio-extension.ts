@@ -1,55 +1,59 @@
+import {Webview} from '@podman-desktop/api';
 import {RpcExtension} from 'podman-desktop-extension-ai-lab-shared/src/messages/MessageProxy';
-import {InferenceManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/inference/inferenceManager';
 import {CatalogManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/catalogManager';
+import {InferenceManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/inference/inferenceManager';
 import {ModelsManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/modelsManager';
-import {PlaygroundV2Manager} from 'podman-desktop-extension-ai-lab-backend/src/managers/playgroundV2Manager';
-import {PodmanConnection} from 'podman-desktop-extension-ai-lab-backend/src/managers/podmanConnection';
-import {CancellationTokenRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/CancellationTokenRegistry';
-import {ContainerRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/ContainerRegistry';
-import {InferenceProviderRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/InferenceProviderRegistry';
+import {
+  CancellationTokenRegistry
+} from 'podman-desktop-extension-ai-lab-backend/src/registries/CancellationTokenRegistry';
+import {ModelHandlerRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/ModelHandlerRegistry';
 import {TaskRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/TaskRegistry';
 import {NextFunction, Request, Response} from 'express';
 import {TelemetryLogger} from '../__tests__/@podman-desktop/api';
+import {ServerWebview} from './server-webview';
+import {StaticInferenceManager} from './static-inference-manager';
+import {StaticModelsManager} from './static-models-manager';
+import {StaticCatalogManager} from './static-catalog-manager';
+import {ExtendedPlaygroundManager} from './extended-playground-manager';
 // Requires more complexity and is not really compatible with tsx
 // import {Studio} from 'podman-desktop-extension-ai-lab-backend/src/studio';
 
 
 export class StudioExtension {
+  private readonly webview: Webview;
   private readonly rpcExtension: RpcExtension;
-  private readonly cancellationTokenRegistry: CancellationTokenRegistry;
-  private readonly containerRegistry: ContainerRegistry;
-  private readonly inferenceProviderRegistry: InferenceProviderRegistry;
-  private readonly taskRegistry: TaskRegistry;
-  private readonly podmanConnection: PodmanConnection;
+  private readonly modelHandlerRegistry: ModelHandlerRegistry
   private readonly modelsManager: ModelsManager;
-  private readonly telemetryLogger: TelemetryLogger;
   private readonly catalogManager: CatalogManager;
   private readonly inferenceManager: InferenceManager;
-  private readonly playgroundManager: PlaygroundV2Manager;
+  private readonly cancellationTokenRegistry: CancellationTokenRegistry;
+  private readonly taskRegistry: TaskRegistry;
+  private readonly telemetryLogger: TelemetryLogger;
+  private readonly playgroundManager: ExtendedPlaygroundManager;
 
   constructor(
     appUserDirectory: string,
     port: number,
   ) {
-    this.rpcExtension = new RpcExtension(undefined);
-    this.inferenceManager = new InferenceManager(
-      this.rpcExtension,
-      this.containerRegistry,
-      this.podmanConnection,
+    this.webview = new ServerWebview() as unknown as Webview;
+    this.rpcExtension = new RpcExtension(this.webview);
+    this.modelHandlerRegistry = new ModelHandlerRegistry(this.rpcExtension);
+    this.modelsManager = new StaticModelsManager(this.modelHandlerRegistry);
+    this.catalogManager = new StaticCatalogManager(this.modelsManager);
+    this.inferenceManager = new StaticInferenceManager(this.modelsManager);
+    this.playgroundManager = new ExtendedPlaygroundManager(
       this.modelsManager,
-      this.telemetryLogger,
-      this.taskRegistry,
-      this.inferenceProviderRegistry,
-      this.catalogManager
-    );
-    this.playgroundManager = new PlaygroundV2Manager(
       appUserDirectory,
       this.rpcExtension,
       this.inferenceManager,
       this.taskRegistry,
       this.telemetryLogger,
       this.cancellationTokenRegistry
-    )
+    );
+  }
+
+  public async init(): Promise<void> {
+    await this.playgroundManager.initTestData();
   }
 
   public middleware(req: Request, res: Response, next: NextFunction): void {
@@ -58,5 +62,23 @@ export class StudioExtension {
       return;
     }
     console.log(req.body);
+    switch (req.body.method) {
+      case 'getInferenceServers': {
+        res.json(this.inferenceManager.getServers());
+        break;
+      }
+      case 'getModelsInfo': {
+        res.json(this.modelsManager.getModelsInfo());
+        break;
+      }
+      case 'getCatalog': {
+        res.json(this.catalogManager.getCatalog());
+        break;
+      }
+      case 'getPlaygroundConversations': {
+        res.json(this.playgroundManager.getConversations());
+        break;
+      }
+    }
   }
 }

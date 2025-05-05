@@ -86,11 +86,12 @@ const start = async () => {
   vite.bindCLIShortcuts({ print: true });
 
   const studioExtension = new StudioExtension(root, port);
+  await studioExtension.init();
 
   app = express();
   // Order is important
   app.use(express.json());
-  app.use(studioExtension.middleware);
+  app.use(studioExtension.middleware.bind(studioExtension));
   app.use(vite.middlewares);
   server = app.listen(port);
   console.log(`Server started, listening on port ${port}`);
