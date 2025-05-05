@@ -1,4 +1,4 @@
-import { ApplicationCatalog } from '@shared/models/IApplicationCatalog';
+import { type ApplicationCatalog } from '@shared/models/IApplicationCatalog';
 import { getModelsInfo } from './models';
 
 export function getCatalog(): ApplicationCatalog {

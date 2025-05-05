@@ -1,5 +1,5 @@
 import {vi} from 'vitest';
-import {CancellationToken, Event, TelemetryTrustedValue} from "@podman-desktop/api";
+import {CancellationToken, Event, TelemetryTrustedValue} from '@podman-desktop/api';
 
 export class CancellationTokenSource {
   public token: CancellationToken;

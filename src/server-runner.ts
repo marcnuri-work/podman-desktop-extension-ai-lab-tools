@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import {createServer, ViteDevServer} from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import tailwindcss from '@tailwindcss/vite';
+import {StudioExtension} from './server/studio-extension';
 
 const __dirname: string = fileURLToPath(new URL('.', import.meta.url));
 const port: number = 5173;
@@ -28,6 +29,7 @@ process.on('SIGINT', () => {
   if (server) {
     closing.push(new Promise<void>(
       (resolve) => {
+        server.closeAllConnections();
         server.close(() => {
           console.log('Express server closed');
           resolve();
@@ -45,7 +47,7 @@ process.on('SIGINT', () => {
     });
 });
 
-try {
+const start = async () => {
   vite = await createServer({
     configFile: false,
     mode,
@@ -81,16 +83,22 @@ try {
       },
     },
   });
-
   vite.bindCLIShortcuts({ print: true });
 
+  const studioExtension = new StudioExtension(root, port);
+
   app = express();
-  app.use(vite.middlewares);
+  // Order is important
   app.use(express.json());
+  app.use(studioExtension.middleware);
+  app.use(vite.middlewares);
   server = app.listen(port);
   console.log(`Server started, listening on port ${port}`);
-} catch (e) {
-  console.error('Error starting server:', e);
-  process.exit(1);
 }
+
+start()
+  .catch(e => {
+    console.error('Error starting server:', e);
+    process.exit(1);
+  });
 

@@ -1,4 +1,4 @@
-import * as api from '@podman-desktop/api';
+import * as api from './@podman-desktop/api';
 
 Object.defineProperty(window, 'acquirePodmanDesktopApi', {
   value: () => {

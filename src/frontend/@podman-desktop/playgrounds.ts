@@ -1,4 +1,4 @@
-import { AssistantChat, Conversation, SystemPrompt, UserChat } from '@shared/models/IPlaygroundMessage';
+import type { AssistantChat, Conversation, SystemPrompt, UserChat } from '@shared/models/IPlaygroundMessage';
 
 export function getPlaygroundConversations(): Conversation[] {
   return [

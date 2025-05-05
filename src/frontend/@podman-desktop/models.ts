@@ -1,4 +1,4 @@
-import { ModelInfo } from '@shared/models/IModelInfo';
+import { type ModelInfo } from '@shared/models/IModelInfo';
 import { InferenceType } from '@shared/models/IInference';
 
 export function getModelsInfo(): ModelInfo[] {

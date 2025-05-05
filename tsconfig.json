@@ -1,16 +1,33 @@
 {
+  "files": [
+    "src/server-runner.ts"
+  ],
   "compilerOptions": {
-    "target": "es2017",
+    "outDir": "dist",
+    "target": "esnext",
     "module": "esnext",
     "moduleResolution": "bundler",
+    "moduleDetection": "force",
     "allowArbitraryExtensions": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "baseUrl": "./",
     "paths": {
       "/@/*": [
         "./node_modules/podman-desktop-extension-ai-lab-backend/src/*",
         "./node_modules/podman-desktop-extension-ai-lab-frontend/src/*"
       ],
       "@shared/*": ["./node_modules/podman-desktop-extension-ai-lab-shared/src/*"],
-    }
+      "@podman-desktop/api": [
+        "./src/server/podman-desktop-api.ts"
+      ]
+    },
+    "strict": false,
+    "strictPropertyInitialization": false,
+    "useUnknownInCatchVariables": true,
+    "skipLibCheck": true
   },
   "include": [
     "**/*.svelte",
@@ -18,13 +35,18 @@
     "src/**/*.ts",
     "src/**/*.js",
     "src/**/*.svelte",
-    "../../types/**/*.d.ts",
+    "node_modules/postman-collection/types/index.d.ts",
+    "node_modules/@podman-desktop/api/src/extension-api.d.ts",
     "node_modules/podman-desktop-extension-ai-lab-backend/**/*.ts",
     "node_modules/podman-desktop-extension-ai-lab-backend/**/*.d.ts",
     "node_modules/podman-desktop-extension-ai-lab-frontend/**/*.ts",
     "node_modules/podman-desktop-extension-ai-lab-frontend/**/*.d.ts",
     "node_modules/podman-desktop-extension-ai-lab-frontend/**/*.svelte",
     "node_modules/podman-desktop-extension-ai-lab-shared/**/*.ts",
-    "node_modules/podman-desktop-extension-ai-lab-shared/**/*.d.ts"
+    "node_modules/podman-desktop-extension-ai-lab-shared/**/*.d.ts",
+    "node_modules/podman-desktop-extension-ai-lab-parent/types/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules/**/*.spec.ts"
   ]
 }
