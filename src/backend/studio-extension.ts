@@ -1,4 +1,4 @@
-import {Webview} from '@podman-desktop/api';
+import {type Disposable, Webview} from '@podman-desktop/api';
 import {RpcExtension} from 'podman-desktop-extension-ai-lab-shared/src/messages/MessageProxy';
 import {CatalogManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/catalogManager';
 import {InferenceManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/inference/inferenceManager';
@@ -16,11 +16,12 @@ import {StaticModelsManager} from './static-models-manager';
 import {StaticCatalogManager} from './static-catalog-manager';
 import {ExtendedPlaygroundManager} from './extended-playground-manager';
 import type {ExtensionConfiguration} from '@shared/models/IExtensionConfiguration';
+import {Closable} from "./closable";
 // Requires more complexity and is not really compatible with tsx
 // import {Studio} from 'podman-desktop-extension-ai-lab-backend/src/studio';
 
 
-export class StudioExtension {
+export class StudioExtension implements Closable {
   private readonly webview: Webview;
   private readonly rpcExtension: RpcExtension;
   private readonly modelHandlerRegistry: ModelHandlerRegistry
@@ -97,5 +98,15 @@ export class StudioExtension {
         res.json('');
       }
     }
+  }
+
+  async close(): Promise<void> {
+    const disposables: Disposable[] = [
+      this.rpcExtension,
+      this.modelsManager,
+      this.catalogManager,
+      this.playgroundManager
+    ];
+    disposables.forEach(disposable => disposable.dispose());
   }
 }

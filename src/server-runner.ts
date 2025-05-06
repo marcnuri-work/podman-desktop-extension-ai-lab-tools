@@ -1,11 +1,9 @@
-import express from 'express';
-import * as http from 'node:http';
 import path, {join} from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {createServer, ViteDevServer} from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import tailwindcss from '@tailwindcss/vite';
-import {StudioExtension} from './backend/studio-extension';
+import {Server} from './backend/server';
 
 const __dirname: string = fileURLToPath(new URL('.', import.meta.url));
 const port: number = 5173;
@@ -14,27 +12,20 @@ const root: string = path.join(__dirname, '..');
 const aiLabFrontend = path.resolve(root, 'node_modules', 'podman-desktop-extension-ai-lab-frontend');
 const aiLabShared = path.resolve(root, 'node_modules', 'podman-desktop-extension-ai-lab-shared');
 
-let vite: ViteDevServer;
-let app: express.Express;
-let server: http.Server;
+let frontendServer: ViteDevServer;
+let backendServer: Server;
+
 process.on('SIGINT', () => {
   console.log('SIGINT received, closing server...');
   const closing: Promise<void>[] = [];
-  if (vite) {
+  if (frontendServer) {
     closing.push((async () => {
-      await vite.close();
-      console.log('Vite server closed');
+      await frontendServer.close();
+      console.log('Frontend server closed');
     })());
   }
-  if (server) {
-    closing.push(new Promise<void>(
-      (resolve) => {
-        server.closeAllConnections();
-        server.close(() => {
-          console.log('Express server closed');
-          resolve();
-        });
-      }));
+  if (backendServer) {
+    closing.push(backendServer.close());
   }
   Promise.all(closing)
     .then(() => {
@@ -48,7 +39,7 @@ process.on('SIGINT', () => {
 });
 
 const start = async () => {
-  vite = await createServer({
+  frontendServer = await createServer({
     configFile: false,
     mode,
     root,
@@ -85,18 +76,10 @@ const start = async () => {
       },
     },
   });
-  vite.bindCLIShortcuts({ print: true });
+  frontendServer.bindCLIShortcuts({ print: true });
 
-  const studioExtension = new StudioExtension(root, port);
-  await studioExtension.init();
-
-  app = express();
-  // Order is important
-  app.use(express.json());
-  app.use(studioExtension.middleware.bind(studioExtension));
-  app.use(vite.middlewares);
-  server = app.listen(port);
-  console.log(`Server started, listening on port ${port}`);
+  backendServer = new Server(root, port, frontendServer);
+  await backendServer.init();
 }
 
 start()
