@@ -15,6 +15,7 @@ import {StaticInferenceManager} from './static-inference-manager';
 import {StaticModelsManager} from './static-models-manager';
 import {StaticCatalogManager} from './static-catalog-manager';
 import {ExtendedPlaygroundManager} from './extended-playground-manager';
+import type {ExtensionConfiguration} from '@shared/models/IExtensionConfiguration';
 // Requires more complexity and is not really compatible with tsx
 // import {Studio} from 'podman-desktop-extension-ai-lab-backend/src/studio';
 
@@ -32,8 +33,8 @@ export class StudioExtension {
   private readonly playgroundManager: ExtendedPlaygroundManager;
 
   constructor(
-    appUserDirectory: string,
-    port: number,
+    private appUserDirectory: string,
+    private port: number,
   ) {
     this.webview = new ServerWebview() as unknown as Webview;
     this.rpcExtension = new RpcExtension(this.webview);
@@ -77,6 +78,19 @@ export class StudioExtension {
       }
       case 'getPlaygroundConversations': {
         res.json(this.playgroundManager.getConversations());
+        break;
+      }
+      case 'getExtensionConfiguration': {
+        res.json({
+          experimentalGPU: true,
+          modelsPath: this.appUserDirectory,
+          apiPort: this.port,
+          appearance: 'dark'
+        } as ExtensionConfiguration);
+        break;
+      }
+      case 'getPodmanDesktopVersion': {
+        res.json('1.33.7');
         break;
       }
     }
