@@ -15,8 +15,12 @@ import {StaticInferenceManager} from './static-inference-manager';
 import {StaticModelsManager} from './static-models-manager';
 import {StaticCatalogManager} from './static-catalog-manager';
 import {ExtendedPlaygroundManager} from './extended-playground-manager';
+import type {ApplicationCatalog} from '@shared/models/IApplicationCatalog';
 import type {ExtensionConfiguration} from '@shared/models/IExtensionConfiguration';
-import {Closable} from "./closable";
+import type {InferenceServer} from '@shared/models/IInference';
+import type {ModelInfo} from '@shared/models/IModelInfo';
+import type {Conversation} from '@shared/models/IPlaygroundMessage';
+import {Closable} from './closable';
 // Requires more complexity and is not really compatible with tsx
 // import {Studio} from 'podman-desktop-extension-ai-lab-backend/src/studio';
 
@@ -58,46 +62,37 @@ export class StudioExtension implements Closable {
     await this.playgroundManager.initTestData();
   }
 
-  public middleware(req: Request, res: Response, next: NextFunction): void {
-    if (!req.url.startsWith('/api')) {
-      next();
-      return;
-    }
-    console.log(req.body);
-    switch (req.body.method) {
-      case 'getInferenceServers': {
-        res.json(this.inferenceManager.getServers());
-        break;
-      }
-      case 'getModelsInfo': {
-        res.json(this.modelsManager.getModelsInfo());
-        break;
-      }
-      case 'getCatalog': {
-        res.json(this.catalogManager.getCatalog());
-        break;
-      }
-      case 'getPlaygroundConversations': {
-        res.json(this.playgroundManager.getConversations());
-        break;
-      }
-      case 'getExtensionConfiguration': {
-        res.json({
-          experimentalGPU: true,
-          modelsPath: this.appUserDirectory,
-          apiPort: this.port,
-          appearance: 'dark'
-        } as ExtensionConfiguration);
-        break;
-      }
-      case 'getPodmanDesktopVersion': {
-        res.json('1.33.7');
-        break;
-      }
-      case 'readRoute': {
-        res.json('');
-      }
-    }
+  public getInferenceServers(): InferenceServer[] {
+    return this.inferenceManager.getServers();
+  }
+
+  public getModelsInfo(): ModelInfo[] {
+    return this.modelsManager.getModelsInfo();
+  }
+
+  public getCatalog(): ApplicationCatalog {
+    return this.catalogManager.getCatalog();
+  }
+
+  public getPlaygroundConversations(): Conversation[] {
+    return this.playgroundManager.getConversations();
+  }
+
+  public getPodmanDesktopVersion(): string {
+    return '1.33.7';
+  }
+
+  public getExtensionConfiguration(): ExtensionConfiguration {
+    return {
+      experimentalGPU: true,
+      modelsPath: this.appUserDirectory,
+      apiPort: this.port,
+      appearance: 'dark'
+    } as ExtensionConfiguration;
+  }
+
+  public readRoute(): string {
+    return '';
   }
 
   async close(): Promise<void> {

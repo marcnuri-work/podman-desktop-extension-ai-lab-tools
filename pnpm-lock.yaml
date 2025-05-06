@@ -58,7 +58,7 @@ importers:
         version: 4.2.0
       openai:
         specifier: 4.96.2
-        version: 4.96.2(zod@3.24.3)
+        version: 4.96.2(ws@8.18.2)(zod@3.24.3)
       podman-desktop-extension-ai-lab-backend:
         specifier: link://~/00-MN/projects/forks/podman-desktop-extension-ai-lab/packages/backend
         version: link:../../forks/podman-desktop-extension-ai-lab/packages/backend
@@ -89,6 +89,9 @@ importers:
       systeminformation:
         specifier: 5.25.11
         version: 5.25.11
+      ws:
+        specifier: 8.18.2
+        version: 8.18.2
       xml-js:
         specifier: 1.6.11
         version: 1.6.11
@@ -2002,6 +2005,18 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
+  ws@8.18.2:
+    resolution: {integrity: sha512-DMricUmwGZUVr++AEAe2uiVM7UoO9MAVZMDu05UQOaUII0lp+zOzLLU4Xqh/JvTqklB1T4uELaaPBKyjE1r4fQ==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   xml-js@1.6.11:
     resolution: {integrity: sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==}
     hasBin: true
@@ -3209,7 +3224,7 @@ snapshots:
     dependencies:
       '@jsdevtools/ono': 7.1.3
 
-  openai@4.96.2(zod@3.24.3):
+  openai@4.96.2(ws@8.18.2)(zod@3.24.3):
     dependencies:
       '@types/node': 18.19.87
       '@types/node-fetch': 2.6.12
@@ -3219,6 +3234,7 @@ snapshots:
       formdata-node: 4.4.1
       node-fetch: 2.7.0
     optionalDependencies:
+      ws: 8.18.2
       zod: 3.24.3
     transitivePeerDependencies:
       - encoding
@@ -3754,6 +3770,8 @@ snapshots:
       stackback: 0.0.2
 
   wrappy@1.0.2: {}
+
+  ws@8.18.2: {}
 
   xml-js@1.6.11:
     dependencies:
