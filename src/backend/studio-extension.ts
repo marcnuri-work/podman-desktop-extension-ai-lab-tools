@@ -14,7 +14,7 @@ import {
 } from 'podman-desktop-extension-ai-lab-backend/src/registries/CancellationTokenRegistry';
 import {ModelHandlerRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/ModelHandlerRegistry';
 import {TaskRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/TaskRegistry';
-import {TelemetryLogger} from '../__tests__/@podman-desktop/api';
+import {TelemetryLogger} from './podman-desktop-api';
 import {StaticInferenceManager} from './static-inference-manager';
 import {StaticModelsManager} from './static-models-manager';
 import {StaticCatalogManager} from './static-catalog-manager';
@@ -46,6 +46,7 @@ export class StudioExtension implements Closable {
     this.catalogManager = new StaticCatalogManager(this.modelsManager);
     this.inferenceManager = new StaticInferenceManager(this.modelsManager);
     this.taskRegistry = new TaskRegistry(this.rpcExtension);
+    this.telemetryLogger = new TelemetryLogger();
     this.playgroundManager = new ExtendedPlaygroundManager(
       this.modelsManager,
       appUserDirectory,
@@ -92,6 +93,10 @@ export class StudioExtension implements Closable {
 
   public getTasks(): Task[] {
     return this.taskRegistry.getTasks();
+  }
+
+  public requestCreatePlayground(name: string, model: ModelInfo) {
+    return this.playgroundManager.requestCreatePlayground(name, model);
   }
 
   public readRoute(): string {

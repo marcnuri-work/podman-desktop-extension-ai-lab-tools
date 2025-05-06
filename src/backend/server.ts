@@ -3,9 +3,9 @@ import {IMessage, isMessageRequest} from '@shared/messages/MessageProxy';
 import express from 'express';
 import {Buffer} from 'node:buffer';
 import console from 'node:console';
-import * as http from 'node:http';
-import {WebSocketServer, WebSocket} from 'ws';
+import {Server as HttpServer} from 'node:http';
 import {ViteDevServer} from 'vite';
+import {WebSocketServer, WebSocket} from 'ws';
 import {Closable} from './closable';
 import {StudioExtension} from './studio-extension';
 
@@ -14,7 +14,7 @@ export class Server implements Webview, Closable {
   private readonly studioExtension: StudioExtension;
   private readonly app: express.Express;
   private readonly connections: WebSocket[];
-  private server: http.Server;
+  private server: HttpServer;
   private webSocketServer: WebSocketServer;
 
   constructor(
@@ -88,16 +88,33 @@ export class Server implements Webview, Closable {
     }
     if (this.studioExtension[message.method]) {
       console.log('Calling method:', message.method);
-      const result = this.studioExtension[message.method](...message.args);
-      this.connections.forEach(ws => {
-        ws.send(JSON.stringify({
-          id: message.id,
-          channel: message.channel,
-          method: message.method,
-          body: result,
-          status: 'success',
-        } as IMessage));
-      });
+      let result = this.studioExtension[message.method](...message.args);
+      if (!(result instanceof Promise)) {
+        result = Promise.resolve(result);
+      }
+      result = result
+        .then((result: unknown) => {
+          this.connections.forEach(ws => {
+            ws.send(JSON.stringify({
+              id: message.id,
+              channel: message.channel,
+              method: message.method,
+              body: result,
+              status: 'success',
+            } as IMessage));
+          });
+        })
+        .catch((error: unknown) => {
+          this.connections.forEach(ws => {
+            ws.send(JSON.stringify({
+              id: message.id,
+              channel: message.channel,
+              method: message.method,
+              body: error,
+              status: 'error',
+            } as IMessage));
+          });
+        });
     } else {
       console.warn('Unsupported method (please implement):', message.method);
     }

@@ -8,7 +8,8 @@ const models: ModelInfo[] = [
     id: 'ibm-granite-3.3',
     name: 'granite3.3:latest',
     description: 'IBM Granite 3.3',
-    // file: { file: 'ibm-granite-3.3.gguf', path: ''},
+    file: { file: 'ibm-granite-3.3.gguf', path: ''},
+    url: 'https://example.com/ibm-granite-3.3',
     backend: InferenceType.LLAMA_CPP,
   },
 ];

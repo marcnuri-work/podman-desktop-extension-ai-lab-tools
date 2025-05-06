@@ -71,3 +71,19 @@ export class EventEmitter<T> {
 export interface Webview {
   postMessage(message: unknown): Promise<boolean>;
 }
+
+export class TelemetryTrustedValue<T = any> {
+  constructor(public readonly value: T) {}
+}
+export class TelemetryLogger {
+  public onDidChangeEnableStates: Event<TelemetryLogger>;
+  public isUsageEnabled: boolean;
+  public isErrorsEnabled: boolean;
+  constructor() {
+    this.isUsageEnabled = true;
+    this.isErrorsEnabled = true;
+  }
+  public logUsage(eventName: string, data?: Record<string, any | TelemetryTrustedValue>): void {}
+  public logError(error: Error | string, data?: Record<string, any | TelemetryTrustedValue>): void {}
+  public dispose(): void {}
+}
