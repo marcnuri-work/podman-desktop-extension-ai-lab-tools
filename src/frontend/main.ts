@@ -1,5 +1,5 @@
 import { mount } from 'svelte';
-import App from 'podman-desktop-extension-ai-lab-frontend/src/App.svelte';
+import App from '/@/App.svelte';
 import './styles/tailwind.css';
 
 const target = document.getElementById('app');

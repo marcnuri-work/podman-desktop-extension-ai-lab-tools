@@ -54,8 +54,10 @@ const start = async () => {
     root,
     resolve: {
       alias: {
-        '@podman-desktop/api': path.resolve(root, 'src', 'frontend', '@podman-desktop', 'api.ts'),
         '/@/': join(aiLabFrontend, 'src') + '/',
+        // Fix utils/client being loaded multiple times as  /@/utils/client and ../utils/client
+        './utils/client': join(aiLabFrontend, 'src', 'utils', 'client'),
+        '../utils/client': join(aiLabFrontend, 'src', 'utils', 'client'),
         '@shared/': join(aiLabShared, 'src') + '/',
       },
     },
