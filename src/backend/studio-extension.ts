@@ -26,7 +26,6 @@ import {Closable} from './closable';
 
 
 export class StudioExtension implements Closable {
-  private readonly webview: Webview;
   private readonly rpcExtension: RpcExtension;
   private readonly modelHandlerRegistry: ModelHandlerRegistry
   private readonly modelsManager: ModelsManager;
@@ -40,8 +39,8 @@ export class StudioExtension implements Closable {
   constructor(
     private appUserDirectory: string,
     private port: number,
+    private readonly webview: Webview,
   ) {
-    this.webview = new ServerWebview() as unknown as Webview;
     this.rpcExtension = new RpcExtension(this.webview);
     this.modelHandlerRegistry = new ModelHandlerRegistry(this.rpcExtension);
     this.modelsManager = new StaticModelsManager(this.modelHandlerRegistry);

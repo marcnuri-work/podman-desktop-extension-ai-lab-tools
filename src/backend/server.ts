@@ -1,28 +1,40 @@
+import {Event, Uri, Webview, WebviewOptions} from '@podman-desktop/api';
+import {IMessage, isMessageRequest} from '@shared/messages/MessageProxy';
 import express from 'express';
 import {Buffer} from 'node:buffer';
+import console from 'node:console';
 import * as http from 'node:http';
 import {WebSocketServer, WebSocket} from 'ws';
 import {ViteDevServer} from 'vite';
 import {Closable} from './closable';
 import {StudioExtension} from './studio-extension';
-import {IMessage, isMessageRequest} from '@shared/messages/MessageProxy';
 
-export class Server implements Closable {
+export class Server implements Webview, Closable {
+
   private readonly studioExtension: StudioExtension;
   private readonly app: express.Express;
   private readonly connections: WebSocket[];
   private server: http.Server;
   private webSocketServer: WebSocketServer;
+
   constructor(
     appUserDirectory: string,
     private port: number,
-    frontendServer: ViteDevServer
+    frontendServer: ViteDevServer,
   ) {
-    this.studioExtension = new StudioExtension(appUserDirectory, port);
+    this.studioExtension = new StudioExtension(appUserDirectory, port, this);
     this.app = express();
     this.app.use(express.json());
     this.app.use(frontendServer.middlewares);
     this.connections = [];
+  }
+
+
+  async postMessage(message: unknown): Promise<boolean> {
+    console.log('Webview.postMessage', message);      this.connections.forEach(ws => {
+      ws.send(JSON.stringify(message));
+    });
+    return true;
   }
 
   async init(): Promise<void> {
@@ -91,5 +103,12 @@ export class Server implements Closable {
     }
   }
 
-
+  /* Unneeded elements added to comply with WebView interface */
+  options: WebviewOptions;
+  html: string;
+  onDidReceiveMessage: Event<unknown>;
+  asWebviewUri(localResource: Uri): Uri {
+    throw new Error('Method not implemented.');
+  }
+  cspSource: string;
 }
