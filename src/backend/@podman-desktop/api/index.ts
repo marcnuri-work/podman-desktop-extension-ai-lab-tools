@@ -1,5 +1,10 @@
 import * as nodeFs from 'node:fs';
 import * as nodeProcess from 'node:process';
+export {CancellationToken} from './CancellationToken';
+export {CancellationTokenSource} from './CancellationTokenSource';
+export {Disposable} from './Disposable';
+export {Emitter} from './Emitter';
+export {TelemetryLogger} from './TelemetryLogger';
 
 export const configuration = {};
 export const containerEngine = {
@@ -30,33 +35,6 @@ export const provider = {
   }
 };
 export const window = {};
-export class Disposable {
-  private disposable: undefined | (() => void);
-  constructor(func: () => void){
-    this.disposable = func;
-  }
-  dispose(): void {
-    if (this.disposable) {
-      this.disposable();
-      this.disposable = undefined;
-    }
-  }
-
-  static create(func: () => void): Disposable {
-    return new Disposable(func);
-  }
-  static from(...disposables: { dispose(): unknown }[]): Disposable {
-    return new Disposable(() => {
-      if (disposables) {
-        for (const disposable of disposables) {
-          if (disposable && typeof disposable.dispose === 'function') {
-            disposable.dispose();
-          }
-        }
-      }
-    });
-  }
-}
 export class EventEmitter<T> {
   event(listener: (e: T) => any, thisArgs?: any, disposables?: Disposable[]): Disposable {
     return Disposable.from(...(disposables ?? []));
@@ -68,22 +46,14 @@ export class EventEmitter<T> {
 
   };
 }
+
+export interface Event<T> {
+  (listener: (e: T) => any, thisArgs?: any, disposables?: Disposable[]): Disposable;
+}
 export interface Webview {
   postMessage(message: unknown): Promise<boolean>;
 }
 
 export class TelemetryTrustedValue<T = any> {
   constructor(public readonly value: T) {}
-}
-export class TelemetryLogger {
-  public onDidChangeEnableStates: Event<TelemetryLogger>;
-  public isUsageEnabled: boolean;
-  public isErrorsEnabled: boolean;
-  constructor() {
-    this.isUsageEnabled = true;
-    this.isErrorsEnabled = true;
-  }
-  public logUsage(eventName: string, data?: Record<string, any | TelemetryTrustedValue>): void {}
-  public logError(error: Error | string, data?: Record<string, any | TelemetryTrustedValue>): void {}
-  public dispose(): void {}
 }

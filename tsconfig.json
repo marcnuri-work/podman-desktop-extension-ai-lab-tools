@@ -21,7 +21,7 @@
       ],
       "@shared/*": ["./node_modules/podman-desktop-extension-ai-lab-shared/src/*"],
       "@podman-desktop/api": [
-        "./src/backend/podman-desktop-api.ts",
+        "./src/backend/@podman-desktop/api",
       ]
     },
     "strict": false,
