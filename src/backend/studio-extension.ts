@@ -93,6 +93,9 @@ export class StudioExtension {
         res.json('1.33.7');
         break;
       }
+      case 'readRoute': {
+        res.json('');
+      }
     }
   }
 }
