@@ -1,4 +1,10 @@
 import {type Disposable, Webview} from '@podman-desktop/api';
+import type {ApplicationCatalog} from '@shared/models/IApplicationCatalog';
+import type {ExtensionConfiguration} from '@shared/models/IExtensionConfiguration';
+import type {InferenceServer} from '@shared/models/IInference';
+import type {ModelInfo} from '@shared/models/IModelInfo';
+import type {Conversation} from '@shared/models/IPlaygroundMessage';
+import type {Task} from '@shared/models/ITask';
 import {RpcExtension} from 'podman-desktop-extension-ai-lab-shared/src/messages/MessageProxy';
 import {CatalogManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/catalogManager';
 import {InferenceManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/inference/inferenceManager';
@@ -8,18 +14,11 @@ import {
 } from 'podman-desktop-extension-ai-lab-backend/src/registries/CancellationTokenRegistry';
 import {ModelHandlerRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/ModelHandlerRegistry';
 import {TaskRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/TaskRegistry';
-import {NextFunction, Request, Response} from 'express';
 import {TelemetryLogger} from '../__tests__/@podman-desktop/api';
-import {ServerWebview} from './server-webview';
 import {StaticInferenceManager} from './static-inference-manager';
 import {StaticModelsManager} from './static-models-manager';
 import {StaticCatalogManager} from './static-catalog-manager';
 import {ExtendedPlaygroundManager} from './extended-playground-manager';
-import type {ApplicationCatalog} from '@shared/models/IApplicationCatalog';
-import type {ExtensionConfiguration} from '@shared/models/IExtensionConfiguration';
-import type {InferenceServer} from '@shared/models/IInference';
-import type {ModelInfo} from '@shared/models/IModelInfo';
-import type {Conversation} from '@shared/models/IPlaygroundMessage';
 import {Closable} from './closable';
 // Requires more complexity and is not really compatible with tsx
 // import {Studio} from 'podman-desktop-extension-ai-lab-backend/src/studio';
@@ -46,6 +45,7 @@ export class StudioExtension implements Closable {
     this.modelsManager = new StaticModelsManager(this.modelHandlerRegistry);
     this.catalogManager = new StaticCatalogManager(this.modelsManager);
     this.inferenceManager = new StaticInferenceManager(this.modelsManager);
+    this.taskRegistry = new TaskRegistry(this.rpcExtension);
     this.playgroundManager = new ExtendedPlaygroundManager(
       this.modelsManager,
       appUserDirectory,
@@ -61,16 +61,25 @@ export class StudioExtension implements Closable {
     await this.playgroundManager.initTestData();
   }
 
+  public getCatalog(): ApplicationCatalog {
+    return this.catalogManager.getCatalog();
+  }
+
+  public getExtensionConfiguration(): ExtensionConfiguration {
+    return {
+      experimentalGPU: true,
+      modelsPath: this.appUserDirectory,
+      apiPort: this.port,
+      appearance: 'dark'
+    } as ExtensionConfiguration;
+  }
+
   public getInferenceServers(): InferenceServer[] {
     return this.inferenceManager.getServers();
   }
 
   public getModelsInfo(): ModelInfo[] {
     return this.modelsManager.getModelsInfo();
-  }
-
-  public getCatalog(): ApplicationCatalog {
-    return this.catalogManager.getCatalog();
   }
 
   public getPlaygroundConversations(): Conversation[] {
@@ -81,13 +90,8 @@ export class StudioExtension implements Closable {
     return '1.33.7';
   }
 
-  public getExtensionConfiguration(): ExtensionConfiguration {
-    return {
-      experimentalGPU: true,
-      modelsPath: this.appUserDirectory,
-      apiPort: this.port,
-      appearance: 'dark'
-    } as ExtensionConfiguration;
+  public getTasks(): Task[] {
+    return this.taskRegistry.getTasks();
   }
 
   public readRoute(): string {
