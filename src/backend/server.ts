@@ -31,7 +31,8 @@ export class Server implements Webview, Closable {
 
 
   async postMessage(message: unknown): Promise<boolean> {
-    console.log('Webview.postMessage', message);      this.connections.forEach(ws => {
+    console.log('Webview.postMessage', message);
+    this.connections.forEach(ws => {
       ws.send(JSON.stringify(message));
     });
     return true;
@@ -70,7 +71,7 @@ export class Server implements Webview, Closable {
 
   private onConnection(ws: WebSocket): void {
     this.connections.push(ws);
-    ws.on('message', this.onMessage.bind(this));
+    ws.on('message', (data: Buffer, isBinary: boolean) => this.onMessage(data, isBinary).catch(console.error));
     ws.on('close', () => {
       const index = this.connections.indexOf(ws);
       if (index !== -1) {
@@ -80,43 +81,41 @@ export class Server implements Webview, Closable {
     console.log('WebSocket connection established');
   }
 
-  private onMessage(data: Buffer, isBinary: boolean): void {
+  private async onMessage(data: Buffer, _isBinary: boolean): Promise<void> {
     const message = JSON.parse(data.toString());
     if (!isMessageRequest(message)) {
       console.warn('Received incompatible message:', message);
       return;
     }
-    if (this.studioExtension[message.method]) {
+    if (!this.studioExtension[message.method]) {
+      console.warn('Unsupported method (please implement):', message.method);
+      return;
+    }
+    try {
       console.log('Calling method:', message.method);
       let result = this.studioExtension[message.method](...message.args);
-      if (!(result instanceof Promise)) {
-        result = Promise.resolve(result);
+      if (result instanceof Promise) {
+        result = await result;
       }
-      result = result
-        .then((result: unknown) => {
-          this.connections.forEach(ws => {
-            ws.send(JSON.stringify({
-              id: message.id,
-              channel: message.channel,
-              method: message.method,
-              body: result,
-              status: 'success',
-            } as IMessage));
-          });
-        })
-        .catch((error: unknown) => {
-          this.connections.forEach(ws => {
-            ws.send(JSON.stringify({
-              id: message.id,
-              channel: message.channel,
-              method: message.method,
-              body: error,
-              status: 'error',
-            } as IMessage));
-          });
-        });
-    } else {
-      console.warn('Unsupported method (please implement):', message.method);
+      this.connections.forEach(ws => {
+        ws.send(JSON.stringify({
+          id: message.id,
+          channel: message.channel,
+          method: message.method,
+          body: result,
+          status: 'success',
+        } as IMessage));
+      });
+    } catch (error: unknown) {
+      this.connections.forEach(ws => {
+        ws.send(JSON.stringify({
+          id: message.id,
+          channel: message.channel,
+          method: message.method,
+          body: error,
+          status: 'error',
+        } as IMessage));
+      });
     }
   }
 

@@ -27,6 +27,7 @@ export class StaticInferenceManager extends InferenceManager {
   getServers(): InferenceServer[] {
     return [{
       status: 'running',
+      labels: {},
       health: {
         Status: 'healthy',
       },
