@@ -4,8 +4,6 @@ import {AddressInfo} from 'node:net';
 import {createProxyMiddleware} from 'http-proxy-middleware';
 import {Closable} from './backend';
 
-const DEFAULT_PORT = 3000;
-
 const DEFAULT_TARGET_URL = 'http://192.168.5.12:11434';
 
 export class ProxyServer implements Closable {
@@ -13,7 +11,7 @@ export class ProxyServer implements Closable {
   private server: Server
 
   constructor(
-    private port: number = DEFAULT_PORT,
+    private port?: number,
     private targetUrl: string = DEFAULT_TARGET_URL
   ) {
     this.app = express();
@@ -56,8 +54,8 @@ export class ProxyServer implements Closable {
     }
   }
 
-  public address(): AddressInfo | string {
-    return this.server.address();
+  public address(): AddressInfo {
+    return this.server.address() as AddressInfo;
   }
 }
 

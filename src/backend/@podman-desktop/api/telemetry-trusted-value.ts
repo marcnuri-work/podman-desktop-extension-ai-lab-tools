@@ -1,3 +1,3 @@
-export class TelemetryTrustedValue<T> {
+export class TelemetryTrustedValue<T = any> {
   constructor(public readonly value: T) {}
 }

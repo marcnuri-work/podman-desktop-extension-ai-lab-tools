@@ -2,7 +2,7 @@ import * as nodeFs from 'node:fs';
 import * as nodeProcess from 'node:process';
 export {CancellationToken} from './cancellation-token';
 export {CancellationTokenSource} from './cancellation-token-source';
-export {Disposable} from './disposable';
+export {type Disposable, SimpleDisposable} from './disposable';
 export {Emitter} from './emitter';
 export type {Event} from './event';
 export {EventEmitter} from './event-emitter';

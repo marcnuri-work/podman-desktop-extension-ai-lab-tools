@@ -20,8 +20,8 @@ const SYSTEM_PROMPT =
   'If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.';
 
 describe('Generate', () => {
-  let proxyServer;
-  let mcpClients;
+  let proxyServer: ProxyServer;
+  let mcpClients: McpClient[];
 
   beforeEach(async () => {
     proxyServer = new ProxyServer();

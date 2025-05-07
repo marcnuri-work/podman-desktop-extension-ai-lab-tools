@@ -1,6 +1,5 @@
 import {Event, TelemetryTrustedValue} from '@podman-desktop/api';
 
-
 export interface TelemetryLogger {
   readonly onDidChangeEnableStates: Event<TelemetryLogger>;
   readonly isUsageEnabled: boolean;

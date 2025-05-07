@@ -1,4 +1,8 @@
-export class Disposable {
+export interface Disposable {
+  dispose(): void;
+}
+
+export class SimpleDisposable {
   private disposable: undefined | (() => void);
   constructor(func: () => void){
     this.disposable = func;
@@ -11,10 +15,10 @@ export class Disposable {
   }
 
   static create(func: () => void): Disposable {
-    return new Disposable(func);
+    return new SimpleDisposable(func);
   }
   static from(...disposables: { dispose(): unknown }[]): Disposable {
-    return new Disposable(() => {
+    return new SimpleDisposable(() => {
       if (disposables) {
         for (const disposable of disposables) {
           if (disposable && typeof disposable.dispose === 'function') {
