@@ -1,10 +1,12 @@
 import * as nodeFs from 'node:fs';
 import * as nodeProcess from 'node:process';
-export {CancellationToken} from './CancellationToken';
-export {CancellationTokenSource} from './CancellationTokenSource';
-export {Disposable} from './Disposable';
-export {Emitter} from './Emitter';
-export {TelemetryLogger} from './TelemetryLogger';
+export {CancellationToken} from './cancellation-token';
+export {CancellationTokenSource} from './cancellation-token-source';
+export {Disposable} from './disposable';
+export {Emitter} from './emitter';
+export {EventEmitter} from './event-emitter';
+export {TelemetryLogger} from './telemetry-logger';
+export {TelemetryTrustedValue} from './telemetry-trusted-value';
 
 export const configuration = {};
 export const containerEngine = {
@@ -35,25 +37,10 @@ export const provider = {
   }
 };
 export const window = {};
-export class EventEmitter<T> {
-  event(listener: (e: T) => any, thisArgs?: any, disposables?: Disposable[]): Disposable {
-    return Disposable.from(...(disposables ?? []));
-  }
-  fire(data: T): void {
-
-  };
-  dispose(): void {
-
-  };
-}
 
 export interface Event<T> {
   (listener: (e: T) => any, thisArgs?: any, disposables?: Disposable[]): Disposable;
 }
 export interface Webview {
   postMessage(message: unknown): Promise<boolean>;
-}
-
-export class TelemetryTrustedValue<T = any> {
-  constructor(public readonly value: T) {}
 }

@@ -1,8 +1,9 @@
-import {type Disposable, Webview} from '@podman-desktop/api';
+import {type Disposable, TelemetryLogger, Webview} from '@podman-desktop/api';
 import type {ApplicationCatalog} from '@shared/models/IApplicationCatalog';
 import type {ExtensionConfiguration} from '@shared/models/IExtensionConfiguration';
 import type {InferenceServer} from '@shared/models/IInference';
 import type {ModelInfo} from '@shared/models/IModelInfo';
+import type {ModelOptions} from '@shared/models/IModelOptions';
 import type {Conversation} from '@shared/models/IPlaygroundMessage';
 import type {Task} from '@shared/models/ITask';
 import {RpcExtension} from 'podman-desktop-extension-ai-lab-shared/src/messages/MessageProxy';
@@ -14,7 +15,6 @@ import {
 } from 'podman-desktop-extension-ai-lab-backend/src/registries/CancellationTokenRegistry';
 import {ModelHandlerRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/ModelHandlerRegistry';
 import {TaskRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/TaskRegistry';
-import {TelemetryLogger} from './podman-desktop-api';
 import {StaticInferenceManager} from './static-inference-manager';
 import {StaticModelsManager} from './static-models-manager';
 import {StaticCatalogManager} from './static-catalog-manager';
@@ -47,6 +47,7 @@ export class StudioExtension implements Closable {
     this.inferenceManager = new StaticInferenceManager(this.modelsManager);
     this.taskRegistry = new TaskRegistry(this.rpcExtension);
     this.telemetryLogger = new TelemetryLogger();
+    this.cancellationTokenRegistry = new CancellationTokenRegistry();
     this.playgroundManager = new ExtendedPlaygroundManager(
       this.modelsManager,
       appUserDirectory,
@@ -101,6 +102,10 @@ export class StudioExtension implements Closable {
 
   public readRoute(): string {
     return '';
+  }
+
+  public submitPlaygroundMessage(containerId: string, userInput: string, options?: ModelOptions): Promise<number> {
+    return this.playgroundManager.submit(containerId, userInput, options);
   }
 
   async close(): Promise<void> {

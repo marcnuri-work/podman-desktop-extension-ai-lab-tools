@@ -7,8 +7,9 @@ export class Emitter<T = unknown> {
   get event(): Event<T> {
     this._event ??= (listener: (e: T) => any, thisArgs?: any, disposables?: Disposable[]): Disposable => {
       // no-op
+      return Disposable.create(() => {});
     }
-    this._event.maxListeners = 0;
+    this._event['maxListeners'] = 0;
     return this._event;
   }
 }

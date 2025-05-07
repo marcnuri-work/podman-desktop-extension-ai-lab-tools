@@ -1,8 +1,17 @@
-import {Emitter} from '@podman-desktop/api';
+import {Disposable, Emitter, Event} from '@podman-desktop/api';
+
+const shortcutEvent: Event<unknown> = Object.freeze((callback, context?): Disposable => {
+  const handle = setTimeout(callback.bind(context), 0);
+  return {
+    dispose(): void {
+      clearTimeout(handle);
+    },
+  };
+});
 
 export class CancellationToken {
   private _isCancellationRequested: boolean;
-  private emitter: Emitter<unknown> | undefined;
+  private emitter: Emitter | undefined;
 
   constructor() {
     this._isCancellationRequested = false;
