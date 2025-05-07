@@ -1,4 +1,4 @@
-import {Event, Uri, Webview, WebviewOptions} from '@podman-desktop/api';
+import {Webview} from '@podman-desktop/api';
 import {IMessage, isMessageRequest} from '@shared/messages/MessageProxy';
 import express from 'express';
 import {Buffer} from 'node:buffer';
@@ -119,12 +119,4 @@ export class Server implements Webview, Closable {
     }
   }
 
-  /* Unneeded elements added to comply with WebView interface */
-  options: WebviewOptions;
-  html: string;
-  onDidReceiveMessage: Event<unknown>;
-  asWebviewUri(localResource: Uri): Uri {
-    throw new Error('Method not implemented.');
-  }
-  cspSource: string;
 }

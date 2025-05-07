@@ -8,7 +8,9 @@ export type {Event} from './event';
 export {EventEmitter} from './event-emitter';
 export {NoOpTelemetryLogger, type TelemetryLogger} from './telemetry-logger';
 export {TelemetryTrustedValue} from './telemetry-trusted-value';
+export type {Uri} from './uri';
 export type {Webview} from './webview';
+export type {WebviewOptions} from './webview-options';
 
 export const configuration = {};
 export const containerEngine = {
