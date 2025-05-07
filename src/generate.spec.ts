@@ -1,13 +1,13 @@
-import { afterEach, beforeEach, describe, test } from 'vitest';
-import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
-import { generateText, simulateStreamingMiddleware, streamText, wrapLanguageModel } from 'ai';
-import { startServer } from './proxy-server';
+import {createOpenAICompatible} from '@ai-sdk/openai-compatible';
+import {afterEach, beforeEach, describe, test} from 'vitest';
+import {generateText, simulateStreamingMiddleware, streamText, wrapLanguageModel} from 'ai';
 import {
-  McpClient,
-  McpServer,
+  type McpClient,
+  type McpServer,
   McpServerType,
-  toMcpClients,
-} from 'podman-desktop-extension-ai-lab-backend/src/managers/playground/McpServerManager';
+} from 'podman-desktop-extension-ai-lab-backend/src/models/mcpTypes';
+import {toMcpClients} from 'podman-desktop-extension-ai-lab-backend/src/utils/mcpUtils';
+import {ProxyServer} from './proxy-server';
 
 const MODEL_NAME = 'granite3.3:latest';
 const SYSTEM_PROMPT =
@@ -24,7 +24,8 @@ describe('Generate', () => {
   let mcpClients;
 
   beforeEach(async () => {
-    proxyServer = startServer();
+    proxyServer = new ProxyServer();
+    await proxyServer.start();
     mcpClients = await toMcpClients({
       enabled: true,
       name: 'podman-mcp-server',
@@ -33,8 +34,8 @@ describe('Generate', () => {
       args: ['-y', 'podman-mcp-server'],
     } as McpServer);
   });
-  afterEach(() => {
-    proxyServer.close();
+  afterEach(async () => {
+    await proxyServer.close();
     mcpClients.forEach((c: McpClient) => c.close());
   });
   test(

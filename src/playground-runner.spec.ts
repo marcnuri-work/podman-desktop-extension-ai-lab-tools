@@ -1,23 +1,26 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { startServer } from './proxy-server';
-import { PlaygroundV2Manager } from 'podman-desktop-extension-ai-lab-backend/src/managers/playgroundV2Manager';
-import { TelemetryLogger } from './__tests__/@podman-desktop/api';
-import type { InferenceServer } from '@shared/models/IInference';
-import { InferenceManager } from 'podman-desktop-extension-ai-lab-backend/src/managers/inference/inferenceManager';
-import type { ModelInfo } from '@shared/models/IModelInfo';
-import { TaskRegistry } from 'podman-desktop-extension-ai-lab-backend/src/registries/TaskRegistry';
-import { CancellationTokenRegistry } from 'podman-desktop-extension-ai-lab-backend/src/registries/CancellationTokenRegistry';
-import { RpcExtension } from '@shared/messages/MessageProxy';
-import type { ModelOptions } from '@shared/models/IModelOptions';
-import type { ChatMessage } from '@shared/models/IPlaygroundMessage';
+import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest';
+import {TelemetryLogger} from '@podman-desktop/api';
+import type {InferenceServer} from '@shared/models/IInference';
+import type {ModelInfo} from '@shared/models/IModelInfo';
+import {RpcExtension} from '@shared/messages/MessageProxy';
+import type {ModelOptions} from '@shared/models/IModelOptions';
+import type {ChatMessage} from '@shared/models/IPlaygroundMessage';
+import {PlaygroundV2Manager} from 'podman-desktop-extension-ai-lab-backend/src/managers/playgroundV2Manager';
+import {InferenceManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/inference/inferenceManager';
+import {TaskRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/TaskRegistry';
+import {
+  CancellationTokenRegistry,
+} from 'podman-desktop-extension-ai-lab-backend/src/registries/CancellationTokenRegistry';
+import {ProxyServer} from './proxy-server';
 
 describe('Playground Runner', () => {
   let manager: PlaygroundV2Manager;
   let inferenceManager: InferenceManager;
-  let proxyServer;
+  let proxyServer: ProxyServer;
 
-  beforeEach(() => {
-    proxyServer = startServer();
+  beforeEach(async () => {
+    proxyServer = new ProxyServer();
+    await proxyServer.start();
     const rpcExtension = new RpcExtension(undefined);
     // @ts-ignore
     inferenceManager = new InferenceManager() as unknown as InferenceManager;
@@ -31,8 +34,8 @@ describe('Playground Runner', () => {
     );
   });
 
-  afterEach(() => {
-    proxyServer.close();
+  afterEach(async () => {
+    await proxyServer.close();
   });
 
   test(
