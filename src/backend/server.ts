@@ -8,12 +8,14 @@ import {ViteDevServer} from 'vite';
 import {WebSocketServer, WebSocket} from 'ws';
 import {Closable} from './closable';
 import {StudioExtension} from './studio-extension';
+import {ProxyServer} from '../';
 
 export class Server implements Webview, Closable {
 
   private readonly studioExtension: StudioExtension;
   private readonly app: express.Express;
   private readonly connections: WebSocket[];
+  private readonly ollamaProxy: ProxyServer;
   private server: HttpServer;
   private webSocketServer: WebSocketServer;
 
@@ -27,8 +29,8 @@ export class Server implements Webview, Closable {
     this.app.use(express.json());
     this.app.use(frontendServer.middlewares);
     this.connections = [];
+    this.ollamaProxy = new ProxyServer()
   }
-
 
   async postMessage(message: unknown): Promise<boolean> {
     console.log('Webview.postMessage', message);
@@ -39,7 +41,8 @@ export class Server implements Webview, Closable {
   }
 
   async init(): Promise<void> {
-    await this.studioExtension.init();
+    await this.ollamaProxy.start();
+    await this.studioExtension.init(this.ollamaProxy.address().port);
     this.server = this.app.listen(this.port);
     this.webSocketServer = new WebSocketServer({server: this.server});
     this.webSocketServer.on('connection', this.onConnection.bind(this));

@@ -1,23 +1,26 @@
+import {CatalogManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/catalogManager';
 import {InferenceManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/inference/inferenceManager';
 import {InferenceServer} from '@shared/models/IInference';
-import {ModelsManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/modelsManager';
 
 export class StaticInferenceManager extends InferenceManager {
 
-  readonly modelsManagerInstance: ModelsManager;
+  private readonly catalogManagerInstance: CatalogManager;
+  public ollamaPort: number = 3000;
 
-  constructor(modelsManager: ModelsManager) {
+  constructor(
+    catalogManager: CatalogManager,
+  ) {
     super(
       undefined,
       undefined,
       undefined,
-      modelsManager,
       undefined,
       undefined,
       undefined,
-      undefined
+      undefined,
+      catalogManager
     );
-    this.modelsManagerInstance = modelsManager;
+    this.catalogManagerInstance = catalogManager;
   }
 
   isInitialize(): boolean {
@@ -32,12 +35,12 @@ export class StaticInferenceManager extends InferenceManager {
         Status: 'healthy',
       },
       container: {
-        engineId: 'static-server',
-        containerId: 'static-server-fake-container',
+        engineId: 'ollama',
+        containerId: `remote-ollama-server-${this.ollamaPort}`,
       },
-      models: this.modelsManagerInstance.getModelsInfo(),
+      models: this.catalogManagerInstance.getModels(),
       connection: {
-        port: 3000,
+        port: this.ollamaPort,
       },
     } as InferenceServer];
   }

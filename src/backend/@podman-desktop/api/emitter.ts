@@ -1,4 +1,4 @@
-import {type Disposable, Event, SimpleDisposable} from '@podman-desktop/api';
+import {Disposable, Event,} from '@podman-desktop/api';
 
 export class Emitter<T = unknown> {
 
@@ -7,7 +7,7 @@ export class Emitter<T = unknown> {
   get event(): Event<T> {
     this._event ??= (listener: (e: T) => any, thisArgs?: any, disposables?: Disposable[]): Disposable => {
       // no-op
-      return SimpleDisposable.create(() => {});
+      return Disposable.create(() => {});
     }
     this._event['maxListeners'] = 0;
     return this._event;

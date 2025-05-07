@@ -7,7 +7,7 @@ import {
   McpServerType,
 } from 'podman-desktop-extension-ai-lab-backend/src/models/mcpTypes';
 import {toMcpClients} from 'podman-desktop-extension-ai-lab-backend/src/utils/mcpUtils';
-import {ProxyServer} from './proxy-server';
+import {ProxyServer} from './';
 
 const MODEL_NAME = 'granite3.3:latest';
 const SYSTEM_PROMPT =

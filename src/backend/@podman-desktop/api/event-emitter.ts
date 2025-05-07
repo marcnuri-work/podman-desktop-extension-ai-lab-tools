@@ -1,8 +1,8 @@
-import {type Disposable, SimpleDisposable} from '@podman-desktop/api';
+import {Disposable} from '@podman-desktop/api';
 
 export class EventEmitter<T> {
   event(listener: (e: T) => any, thisArgs?: any, disposables?: Disposable[]): Disposable {
-    return SimpleDisposable.from(...(disposables ?? []));
+    return Disposable.from(...(disposables ?? []));
   }
   fire(data: T): void {
 

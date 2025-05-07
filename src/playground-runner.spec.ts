@@ -11,7 +11,7 @@ import {TaskRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registri
 import {
   CancellationTokenRegistry,
 } from 'podman-desktop-extension-ai-lab-backend/src/registries/CancellationTokenRegistry';
-import {ProxyServer} from './proxy-server';
+import {ProxyServer} from './';
 
 describe('Playground Runner', () => {
   let manager: PlaygroundV2Manager;

@@ -1,22 +1,24 @@
 import {CatalogManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/catalogManager';
-import {ModelsManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/modelsManager';
-import {ApplicationCatalog} from '@shared/models/IApplicationCatalog';
+import {type ApplicationCatalog} from '@shared/models/IApplicationCatalog';
+import {InferenceType} from '@shared/models/IInference';
 
 export class StaticCatalogManager extends CatalogManager {
 
-  readonly modelsManager: ModelsManager;
-
-  constructor(modelsManager: ModelsManager) {
-    super(undefined, undefined);
-    this.modelsManager = modelsManager;
-  }
-
-  getCatalog(): ApplicationCatalog {
-    return {
+  async initTestData(): Promise<void> {
+    Object.assign(this.getCatalog(), {
       version: '1.33.7',
       recipes: [],
-      models: this.modelsManager.getModelsInfo(),
+      models:  [
+        {
+          id: 'ibm-granite-3.3',
+          name: 'granite3.3:latest',
+          description: 'IBM Granite 3.3',
+          file: { file: 'ibm-granite-3.3.gguf', path: ''},
+          url: 'https://example.com/ibm-granite-3.3',
+          backend: InferenceType.LLAMA_CPP,
+        },
+      ],
       categories: [],
-    };
+    } as ApplicationCatalog);
   }
 }

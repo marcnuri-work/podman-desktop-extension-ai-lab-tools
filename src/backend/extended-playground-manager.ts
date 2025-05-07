@@ -1,4 +1,4 @@
-import {ModelsManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/modelsManager';
+import {CatalogManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/catalogManager';
 import {PlaygroundV2Manager} from 'podman-desktop-extension-ai-lab-backend/src/managers/playgroundV2Manager';
 import type {
   AssistantChat,
@@ -9,7 +9,7 @@ import type {
 export class ExtendedPlaygroundManager extends PlaygroundV2Manager {
 
   constructor(
-    private modelsManager: ModelsManager,
+    private catalogManager: CatalogManager,
     appUserDirectory: string,
     rpcExtension: any,
     inferenceManager: any,
@@ -28,7 +28,7 @@ export class ExtendedPlaygroundManager extends PlaygroundV2Manager {
   }
 
   async initTestData(): Promise<void> {
-    const conversationId = await this.createPlayground('Playground 001', this.modelsManager.getModelsInfo()[0], 'playground-001');
+    const conversationId = await this.createPlayground('Playground 001', this.catalogManager.getModels()[0], 'playground-001');
     const conversation = this.getConversations().find(c => c.id === conversationId);
     conversation.messages.push(
       {

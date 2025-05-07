@@ -7,8 +7,6 @@ import type {ModelOptions} from '@shared/models/IModelOptions';
 import type {Conversation} from '@shared/models/IPlaygroundMessage';
 import type {Task} from '@shared/models/ITask';
 import {RpcExtension} from 'podman-desktop-extension-ai-lab-shared/src/messages/MessageProxy';
-import {CatalogManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/catalogManager';
-import {InferenceManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/inference/inferenceManager';
 import {ModelsManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/modelsManager';
 import {
   CancellationTokenRegistry
@@ -16,7 +14,6 @@ import {
 import {ModelHandlerRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/ModelHandlerRegistry';
 import {TaskRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/TaskRegistry';
 import {StaticInferenceManager} from './static-inference-manager';
-import {StaticModelsManager} from './static-models-manager';
 import {StaticCatalogManager} from './static-catalog-manager';
 import {ExtendedPlaygroundManager} from './extended-playground-manager';
 import {Closable} from './closable';
@@ -26,13 +23,13 @@ import {Closable} from './closable';
 
 export class StudioExtension implements Closable {
   private readonly rpcExtension: RpcExtension;
+  private readonly catalogManager: StaticCatalogManager;
+  private readonly telemetryLogger: TelemetryLogger;
+  private readonly taskRegistry: TaskRegistry;
+  private readonly cancellationTokenRegistry: CancellationTokenRegistry;
   private readonly modelHandlerRegistry: ModelHandlerRegistry
   private readonly modelsManager: ModelsManager;
-  private readonly catalogManager: CatalogManager;
-  private readonly inferenceManager: InferenceManager;
-  private readonly cancellationTokenRegistry: CancellationTokenRegistry;
-  private readonly taskRegistry: TaskRegistry;
-  private readonly telemetryLogger: TelemetryLogger;
+  private readonly inferenceManager: StaticInferenceManager;
   private readonly playgroundManager: ExtendedPlaygroundManager;
 
   constructor(
@@ -41,15 +38,24 @@ export class StudioExtension implements Closable {
     private readonly webview: Webview,
   ) {
     this.rpcExtension = new RpcExtension(this.webview);
-    this.modelHandlerRegistry = new ModelHandlerRegistry(this.rpcExtension);
-    this.modelsManager = new StaticModelsManager(this.modelHandlerRegistry);
-    this.catalogManager = new StaticCatalogManager(this.modelsManager);
-    this.inferenceManager = new StaticInferenceManager(this.modelsManager);
-    this.taskRegistry = new TaskRegistry(this.rpcExtension);
+    this.catalogManager = new StaticCatalogManager(this.rpcExtension, appUserDirectory);
     this.telemetryLogger = new NoOpTelemetryLogger();
+    this.taskRegistry = new TaskRegistry(this.rpcExtension);
     this.cancellationTokenRegistry = new CancellationTokenRegistry();
+    this.modelHandlerRegistry = new ModelHandlerRegistry(this.rpcExtension);
+    this.modelsManager = new ModelsManager(
+      this.rpcExtension,
+      this.catalogManager,
+      this.telemetryLogger,
+      this.taskRegistry,
+      this.cancellationTokenRegistry,
+      undefined,
+      undefined,
+      this.modelHandlerRegistry
+    );
+    this.inferenceManager = new StaticInferenceManager(this.catalogManager);
     this.playgroundManager = new ExtendedPlaygroundManager(
-      this.modelsManager,
+      this.catalogManager,
       appUserDirectory,
       this.rpcExtension,
       this.inferenceManager,
@@ -59,7 +65,10 @@ export class StudioExtension implements Closable {
     );
   }
 
-  public async init(): Promise<void> {
+  public async init(ollamaPort: number): Promise<void> {
+    this.inferenceManager.ollamaPort = ollamaPort;
+    await this.catalogManager.initTestData();
+    this.modelsManager.init();
     await this.playgroundManager.initTestData();
   }
 
