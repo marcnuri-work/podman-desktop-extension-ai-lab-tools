@@ -1,5 +1,5 @@
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest';
-import {TelemetryLogger} from '@podman-desktop/api';
+import {NoOpTelemetryLogger} from '@podman-desktop/api';
 import type {InferenceServer} from '@shared/models/IInference';
 import type {ModelInfo} from '@shared/models/IModelInfo';
 import {RpcExtension} from '@shared/messages/MessageProxy';
@@ -29,7 +29,7 @@ describe('Playground Runner', () => {
       rpcExtension,
       inferenceManager,
       new TaskRegistry(rpcExtension),
-      new TelemetryLogger(),
+      new NoOpTelemetryLogger(),
       new CancellationTokenRegistry(),
     );
   });

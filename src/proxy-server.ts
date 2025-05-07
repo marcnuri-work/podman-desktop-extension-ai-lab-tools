@@ -2,12 +2,13 @@ import express from 'express';
 import {Server} from 'node:http';
 import {AddressInfo} from 'node:net';
 import {createProxyMiddleware} from 'http-proxy-middleware';
+import {Closable} from './backend';
 
 const DEFAULT_PORT = 3000;
 
 const DEFAULT_TARGET_URL = 'http://192.168.5.12:11434';
 
-export class ProxyServer {
+export class ProxyServer implements Closable {
   private readonly app: express.Express;
   private server: Server
 

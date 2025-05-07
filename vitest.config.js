@@ -35,7 +35,7 @@ const config = {
   mockReset: true,
   resolve: {
     alias: {
-      '@podman-desktop/api': path.resolve(__dirname, 'src', '__tests__', '@podman-desktop', 'api.ts'),
+      '@podman-desktop/api': path.resolve(__dirname, 'src', 'backend', '@podman-desktop', 'api'),
       '/@/': join(AI_LAB_BACKEND, 'src') + '/',
       '@shared/': join(AI_LAB_SHARED, 'src') + '/',
     },

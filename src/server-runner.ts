@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import {createServer, ViteDevServer} from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import tailwindcss from '@tailwindcss/vite';
-import {Server} from './backend/server';
+import {Server} from './backend';
 
 const __dirname: string = fileURLToPath(new URL('.', import.meta.url));
 const port: number = 5173;

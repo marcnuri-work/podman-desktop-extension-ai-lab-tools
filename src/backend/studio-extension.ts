@@ -1,4 +1,4 @@
-import {type Disposable, TelemetryLogger, Webview} from '@podman-desktop/api';
+import {type Disposable, type Webview, NoOpTelemetryLogger, type TelemetryLogger} from '@podman-desktop/api';
 import type {ApplicationCatalog} from '@shared/models/IApplicationCatalog';
 import type {ExtensionConfiguration} from '@shared/models/IExtensionConfiguration';
 import type {InferenceServer} from '@shared/models/IInference';
@@ -46,7 +46,7 @@ export class StudioExtension implements Closable {
     this.catalogManager = new StaticCatalogManager(this.modelsManager);
     this.inferenceManager = new StaticInferenceManager(this.modelsManager);
     this.taskRegistry = new TaskRegistry(this.rpcExtension);
-    this.telemetryLogger = new TelemetryLogger();
+    this.telemetryLogger = new NoOpTelemetryLogger();
     this.cancellationTokenRegistry = new CancellationTokenRegistry();
     this.playgroundManager = new ExtendedPlaygroundManager(
       this.modelsManager,

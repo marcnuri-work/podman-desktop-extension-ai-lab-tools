@@ -4,9 +4,11 @@ export {CancellationToken} from './cancellation-token';
 export {CancellationTokenSource} from './cancellation-token-source';
 export {Disposable} from './disposable';
 export {Emitter} from './emitter';
+export type {Event} from './event';
 export {EventEmitter} from './event-emitter';
-export {TelemetryLogger} from './telemetry-logger';
+export {NoOpTelemetryLogger, type TelemetryLogger} from './telemetry-logger';
 export {TelemetryTrustedValue} from './telemetry-trusted-value';
+export type {Webview} from './webview';
 
 export const configuration = {};
 export const containerEngine = {
@@ -38,9 +40,3 @@ export const provider = {
 };
 export const window = {};
 
-export interface Event<T> {
-  (listener: (e: T) => any, thisArgs?: any, disposables?: Disposable[]): Disposable;
-}
-export interface Webview {
-  postMessage(message: unknown): Promise<boolean>;
-}
