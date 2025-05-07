@@ -10,11 +10,19 @@ export class StaticCatalogManager extends CatalogManager {
       recipes: [],
       models:  [
         {
-          id: 'ibm-granite-3.3',
+          id: 'ollama-ibm-granite-3.3',
           name: 'granite3.3:latest',
           description: 'IBM Granite 3.3',
           file: { file: 'ibm-granite-3.3.gguf', path: ''},
           url: 'https://example.com/ibm-granite-3.3',
+          backend: InferenceType.LLAMA_CPP,
+        },
+        {
+          id: 'ai-lab-ibm-granite-3.3',
+          name: 'ibm-granite/granite-3.3-8b-instruct-GGUF',
+          description: 'Granite-3.3-8B-Instruct',
+          file: { file: 'ibm-granite-3.3-instruct.gguf', path: ''},
+          url: 'https://example.com/ibm-granite-3.3-instruct',
           backend: InferenceType.LLAMA_CPP,
         },
       ],

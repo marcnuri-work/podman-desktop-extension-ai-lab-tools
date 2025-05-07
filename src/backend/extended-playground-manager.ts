@@ -82,5 +82,9 @@ export class ExtendedPlaygroundManager extends PlaygroundV2Manager {
       completion_tokens: 37,
         prompt_tokens: 13,
     };
+    for (const model of this.catalogManager.getModels()) {
+      await this.createPlayground(`Empty and ready (${model.id})`, model, `empty-and-ready-${model.id}`);
+
+    }
   }
 }

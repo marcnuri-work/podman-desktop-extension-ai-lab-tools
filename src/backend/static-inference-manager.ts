@@ -5,7 +5,8 @@ import {InferenceServer} from '@shared/models/IInference';
 export class StaticInferenceManager extends InferenceManager {
 
   private readonly catalogManagerInstance: CatalogManager;
-  public ollamaPort: number = 3000;
+  public ollamaPort: number = 1337;
+  public aiLabPort: number = 1337;
 
   constructor(
     catalogManager: CatalogManager,
@@ -28,20 +29,29 @@ export class StaticInferenceManager extends InferenceManager {
   }
 
   getServers(): InferenceServer[] {
-    return [{
-      status: 'running',
-      labels: {},
-      health: {
-        Status: 'healthy',
-      },
-      container: {
-        engineId: 'ollama',
-        containerId: `remote-ollama-server-${this.ollamaPort}`,
-      },
-      models: this.catalogManagerInstance.getModels(),
-      connection: {
-        port: this.ollamaPort,
-      },
-    } as InferenceServer];
+    return [
+      {
+        container: {
+          engineId: 'ollama',
+          containerId: `remote-ollama-server-${this.ollamaPort}`,
+        },
+        status: 'running',
+        labels: {},
+        health: {Status: 'healthy'},
+        models: this.catalogManagerInstance.getModels().filter(m => m.id.startsWith('ollama-')),
+        connection: {port: this.ollamaPort},
+      } as InferenceServer,
+      {
+        container: {
+          engineId: 'aiLab',
+          containerId: `remote-ai-lab-server-${this.ollamaPort}`,
+        },
+        status: 'running',
+        labels: {},
+        health: {Status: 'healthy'},
+        models: this.catalogManagerInstance.getModels().filter(m => m.id.startsWith('ai-lab-')),
+        connection: {port: this.aiLabPort},
+      } as InferenceServer,
+    ];
   }
 }

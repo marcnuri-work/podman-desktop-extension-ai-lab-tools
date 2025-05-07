@@ -65,8 +65,9 @@ export class StudioExtension implements Closable {
     );
   }
 
-  public async init(ollamaPort: number): Promise<void> {
+  public async init(ollamaPort: number, aiLabPort: number): Promise<void> {
     this.inferenceManager.ollamaPort = ollamaPort;
+    this.inferenceManager.aiLabPort = aiLabPort;
     await this.catalogManager.initTestData();
     this.modelsManager.init();
     await this.playgroundManager.initTestData();

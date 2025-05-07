@@ -10,12 +10,16 @@ import {Closable} from './closable';
 import {StudioExtension} from './studio-extension';
 import {ProxyServer} from '../';
 
+// TODO: need to use the container port, can't use the AI LAB endpoint yet
+const AI_LAB_API_TARGET_URL = 'http://192.168.5.12:51780';
+
 export class Server implements Webview, Closable {
 
   private readonly studioExtension: StudioExtension;
   private readonly app: express.Express;
   private readonly connections: WebSocket[];
   private readonly ollamaProxy: ProxyServer;
+  private readonly aiLabProxy: ProxyServer;
   private server: HttpServer;
   private webSocketServer: WebSocketServer;
 
@@ -30,6 +34,7 @@ export class Server implements Webview, Closable {
     this.app.use(frontendServer.middlewares);
     this.connections = [];
     this.ollamaProxy = new ProxyServer()
+    this.aiLabProxy = new ProxyServer(undefined, AI_LAB_API_TARGET_URL);
   }
 
   async postMessage(message: unknown): Promise<boolean> {
@@ -42,7 +47,11 @@ export class Server implements Webview, Closable {
 
   async init(): Promise<void> {
     await this.ollamaProxy.start();
-    await this.studioExtension.init(this.ollamaProxy.address().port);
+    await this.aiLabProxy.start();
+    await this.studioExtension.init(
+      this.ollamaProxy.address().port,
+      this.aiLabProxy.address().port
+    );
     this.server = this.app.listen(this.port);
     this.webSocketServer = new WebSocketServer({server: this.server});
     this.webSocketServer.on('connection', this.onConnection.bind(this));
