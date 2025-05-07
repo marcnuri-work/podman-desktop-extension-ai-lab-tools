@@ -61,7 +61,7 @@ describe('Playground Runner', () => {
             },
           ],
           connection: {
-            port: 3000,
+            port: proxyServer.address().port,
           },
         } as unknown as InferenceServer,
       ]);
