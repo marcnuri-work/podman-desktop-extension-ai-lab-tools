@@ -1,16 +1,19 @@
-import * as nodeFs from 'node:fs';
 import * as nodeProcess from 'node:process';
+import {Disposable as DisposableImpl} from './disposable';
 export {CancellationToken} from './cancellation-token';
 export {CancellationTokenSource} from './cancellation-token-source';
 export {Disposable} from './disposable';
 export {Emitter} from './emitter';
 export type {Event} from './event';
 export {EventEmitter} from './event-emitter';
+export {fs} from './fs';
 export {NoOpTelemetryLogger, type TelemetryLogger} from './telemetry-logger';
 export {TelemetryTrustedValue} from './telemetry-trusted-value';
-export type {Uri} from './uri';
+export {type Uri, UriImpl} from './uri';
 export type {Webview} from './webview';
 export type {WebviewOptions} from './webview-options';
+
+export const disposables: DisposableImpl[] = [];
 
 export const configuration = {};
 export const containerEngine = {
@@ -20,7 +23,6 @@ export const containerEngine = {
 };
 export const env = {};
 export const extensions = {};
-export const fs = nodeFs;
 export const navigation = {};
 export const process = nodeProcess;
 export const provider = {

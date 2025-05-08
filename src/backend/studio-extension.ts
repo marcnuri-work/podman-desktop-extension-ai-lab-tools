@@ -1,4 +1,4 @@
-import {type Disposable, type Webview, NoOpTelemetryLogger, type TelemetryLogger} from '@podman-desktop/api';
+import {type Disposable, type Webview, NoOpTelemetryLogger, type TelemetryLogger, disposables} from '@podman-desktop/api';
 import type {ApplicationCatalog} from '@shared/models/IApplicationCatalog';
 import type {ExtensionConfiguration} from '@shared/models/IExtensionConfiguration';
 import type {InferenceServer} from '@shared/models/IInference';
@@ -119,12 +119,13 @@ export class StudioExtension implements Closable {
   }
 
   async close(): Promise<void> {
-    const disposables: Disposable[] = [
+    const toDispose: Disposable[] = [
       this.rpcExtension,
       this.modelsManager,
       this.catalogManager,
-      this.playgroundManager
+      this.playgroundManager,
+      ...disposables
     ];
-    disposables.forEach(disposable => disposable.dispose());
+    toDispose.forEach(disposable => disposable.dispose());
   }
 }
