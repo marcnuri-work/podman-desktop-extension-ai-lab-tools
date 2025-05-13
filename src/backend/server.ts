@@ -1,4 +1,4 @@
-import {Webview} from '@podman-desktop/api';
+import {Emitter, Event, Webview} from '@podman-desktop/api';
 import {IMessage, isMessageRequest} from '@shared/messages/MessageProxy';
 import express from 'express';
 import {Buffer} from 'node:buffer';
@@ -22,6 +22,8 @@ export class Server implements Webview, Closable {
   private readonly aiLabProxy: ProxyServer;
   private server: HttpServer;
   private webSocketServer: WebSocketServer;
+  readonly #onDidReceiveMessage: Emitter;
+  readonly onDidReceiveMessage: Event<unknown>;
 
   constructor(
     appUserDirectory: string,
@@ -35,6 +37,8 @@ export class Server implements Webview, Closable {
     this.connections = [];
     this.ollamaProxy = new ProxyServer()
     this.aiLabProxy = new ProxyServer(undefined, AI_LAB_API_TARGET_URL);
+    this.#onDidReceiveMessage = new Emitter<unknown>();
+    this.onDidReceiveMessage = this.#onDidReceiveMessage.event;
   }
 
   async postMessage(message: unknown): Promise<boolean> {

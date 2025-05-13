@@ -8,6 +8,7 @@ import type {Conversation} from '@shared/models/IPlaygroundMessage';
 import type {Task} from '@shared/models/ITask';
 import {RpcExtension} from 'podman-desktop-extension-ai-lab-shared/src/messages/MessageProxy';
 import {ModelsManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/modelsManager';
+import {McpServerManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/playground/McpServerManager';
 import {
   CancellationTokenRegistry
 } from 'podman-desktop-extension-ai-lab-backend/src/registries/CancellationTokenRegistry';
@@ -30,6 +31,7 @@ export class StudioExtension implements Closable {
   private readonly modelHandlerRegistry: ModelHandlerRegistry
   private readonly modelsManager: ModelsManager;
   private readonly inferenceManager: StaticInferenceManager;
+  private readonly mcpServerManager: McpServerManager;
   private readonly playgroundManager: ExtendedPlaygroundManager;
 
   constructor(
@@ -54,18 +56,21 @@ export class StudioExtension implements Closable {
       this.modelHandlerRegistry
     );
     this.inferenceManager = new StaticInferenceManager(this.catalogManager);
+    this.mcpServerManager = new McpServerManager(this.rpcExtension, this.appUserDirectory);
     this.playgroundManager = new ExtendedPlaygroundManager(
       this.catalogManager,
-      appUserDirectory,
       this.rpcExtension,
       this.inferenceManager,
       this.taskRegistry,
       this.telemetryLogger,
-      this.cancellationTokenRegistry
+      this.cancellationTokenRegistry,
+      this.mcpServerManager,
     );
   }
 
   public async init(ollamaPort: number, aiLabPort: number): Promise<void> {
+    this.rpcExtension.init();
+    this.mcpServerManager.init();
     this.inferenceManager.ollamaPort = ollamaPort;
     this.inferenceManager.aiLabPort = aiLabPort;
     await this.catalogManager.initTestData();

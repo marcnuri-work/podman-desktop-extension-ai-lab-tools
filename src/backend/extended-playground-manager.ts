@@ -1,5 +1,6 @@
 import {CatalogManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/catalogManager';
 import {PlaygroundV2Manager} from 'podman-desktop-extension-ai-lab-backend/src/managers/playgroundV2Manager';
+import {type McpServerManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/playground/McpServerManager';
 import type {
   AssistantChat,
   SystemPrompt,
@@ -10,20 +11,20 @@ export class ExtendedPlaygroundManager extends PlaygroundV2Manager {
 
   constructor(
     private catalogManager: CatalogManager,
-    appUserDirectory: string,
     rpcExtension: any,
     inferenceManager: any,
     taskRegistry: any,
     telemetryLogger: any,
-    cancellationTokenRegistry: any
+    cancellationTokenRegistry: any,
+    mcpServerManager: McpServerManager,
   ) {
     super(
-      appUserDirectory,
       rpcExtension,
       inferenceManager,
       taskRegistry,
       telemetryLogger,
-      cancellationTokenRegistry
+      cancellationTokenRegistry,
+      mcpServerManager,
     );
   }
 
