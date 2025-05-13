@@ -5,6 +5,7 @@ import type {ModelInfo} from '@shared/models/IModelInfo';
 import {RpcExtension} from '@shared/messages/MessageProxy';
 import type {ModelOptions} from '@shared/models/IModelOptions';
 import type {ChatMessage} from '@shared/models/IPlaygroundMessage';
+import {McpServerManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/playground/McpServerManager';
 import {PlaygroundV2Manager} from 'podman-desktop-extension-ai-lab-backend/src/managers/playgroundV2Manager';
 import {InferenceManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/inference/inferenceManager';
 import {TaskRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/TaskRegistry';
@@ -14,9 +15,6 @@ import {
 import {ProxyServer} from './';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
-import {
-  McpServerManager
-} from '../../../forks/podman-desktop-extension-ai-lab/packages/backend/src/managers/playground/McpServerManager';
 
 const __dirname: string = fileURLToPath(new URL('.', import.meta.url));
 
