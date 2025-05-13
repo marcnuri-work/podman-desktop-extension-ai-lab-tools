@@ -1,4 +1,4 @@
-import {Disposable, Emitter, Event} from '@podman-desktop/api';
+import { Disposable, Emitter, Event } from '@podman-desktop/api';
 
 const shortcutEvent: Event<unknown> = Object.freeze((callback, context?): Disposable => {
   const handle = setTimeout(callback.bind(context), 0);

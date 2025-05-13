@@ -1,4 +1,4 @@
-import {Emitter, Event} from '@podman-desktop/api';
+import { Emitter, Event } from '@podman-desktop/api';
 
 export interface Webview {
   readonly onDidReceiveMessage: Event<unknown>;
@@ -6,14 +6,12 @@ export interface Webview {
 }
 
 export class StandaloneWebview implements Webview {
-
   readonly #onDidReceiveMessage: Emitter;
   readonly onDidReceiveMessage: Event<unknown>;
 
   constructor() {
     this.#onDidReceiveMessage = new Emitter<unknown>();
     this.onDidReceiveMessage = this.#onDidReceiveMessage.event;
-
   }
 
   async postMessage(message: unknown): Promise<boolean> {

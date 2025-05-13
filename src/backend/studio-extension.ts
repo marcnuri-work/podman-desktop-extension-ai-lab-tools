@@ -1,26 +1,29 @@
-import {type Disposable, type Webview, NoOpTelemetryLogger, type TelemetryLogger, disposables} from '@podman-desktop/api';
-import type {ApplicationCatalog} from '@shared/models/IApplicationCatalog';
-import type {ExtensionConfiguration} from '@shared/models/IExtensionConfiguration';
-import type {InferenceServer} from '@shared/models/IInference';
-import type {ModelInfo} from '@shared/models/IModelInfo';
-import type {ModelOptions} from '@shared/models/IModelOptions';
-import type {Conversation} from '@shared/models/IPlaygroundMessage';
-import type {Task} from '@shared/models/ITask';
-import {RpcExtension} from 'podman-desktop-extension-ai-lab-shared/src/messages/MessageProxy';
-import {ModelsManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/modelsManager';
-import {McpServerManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/playground/McpServerManager';
 import {
-  CancellationTokenRegistry
-} from 'podman-desktop-extension-ai-lab-backend/src/registries/CancellationTokenRegistry';
-import {ModelHandlerRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/ModelHandlerRegistry';
-import {TaskRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/TaskRegistry';
-import {StaticInferenceManager} from './static-inference-manager';
-import {StaticCatalogManager} from './static-catalog-manager';
-import {ExtendedPlaygroundManager} from './extended-playground-manager';
-import {Closable} from './closable';
+  type Disposable,
+  type Webview,
+  NoOpTelemetryLogger,
+  type TelemetryLogger,
+  disposables,
+} from '@podman-desktop/api';
+import type { ApplicationCatalog } from '@shared/models/IApplicationCatalog';
+import type { ExtensionConfiguration } from '@shared/models/IExtensionConfiguration';
+import type { InferenceServer } from '@shared/models/IInference';
+import type { ModelInfo } from '@shared/models/IModelInfo';
+import type { ModelOptions } from '@shared/models/IModelOptions';
+import type { Conversation } from '@shared/models/IPlaygroundMessage';
+import type { Task } from '@shared/models/ITask';
+import { RpcExtension } from 'podman-desktop-extension-ai-lab-shared/src/messages/MessageProxy';
+import { ModelsManager } from 'podman-desktop-extension-ai-lab-backend/src/managers/modelsManager';
+import { McpServerManager } from 'podman-desktop-extension-ai-lab-backend/src/managers/playground/McpServerManager';
+import { CancellationTokenRegistry } from 'podman-desktop-extension-ai-lab-backend/src/registries/CancellationTokenRegistry';
+import { ModelHandlerRegistry } from 'podman-desktop-extension-ai-lab-backend/src/registries/ModelHandlerRegistry';
+import { TaskRegistry } from 'podman-desktop-extension-ai-lab-backend/src/registries/TaskRegistry';
+import { StaticInferenceManager } from './static-inference-manager';
+import { StaticCatalogManager } from './static-catalog-manager';
+import { ExtendedPlaygroundManager } from './extended-playground-manager';
+import { Closable } from './closable';
 // Requires more complexity and is not really compatible with tsx
 // import {Studio} from 'podman-desktop-extension-ai-lab-backend/src/studio';
-
 
 export class StudioExtension implements Closable {
   private readonly rpcExtension: RpcExtension;
@@ -28,7 +31,7 @@ export class StudioExtension implements Closable {
   private readonly telemetryLogger: TelemetryLogger;
   private readonly taskRegistry: TaskRegistry;
   private readonly cancellationTokenRegistry: CancellationTokenRegistry;
-  private readonly modelHandlerRegistry: ModelHandlerRegistry
+  private readonly modelHandlerRegistry: ModelHandlerRegistry;
   private readonly modelsManager: ModelsManager;
   private readonly inferenceManager: StaticInferenceManager;
   private readonly mcpServerManager: McpServerManager;
@@ -53,7 +56,7 @@ export class StudioExtension implements Closable {
       this.cancellationTokenRegistry,
       undefined,
       undefined,
-      this.modelHandlerRegistry
+      this.modelHandlerRegistry,
     );
     this.inferenceManager = new StaticInferenceManager(this.catalogManager);
     this.mcpServerManager = new McpServerManager(this.rpcExtension, this.appUserDirectory);
@@ -87,7 +90,7 @@ export class StudioExtension implements Closable {
       experimentalGPU: true,
       modelsPath: this.appUserDirectory,
       apiPort: this.port,
-      appearance: 'dark'
+      appearance: 'dark',
     } as ExtensionConfiguration;
   }
 
@@ -129,7 +132,7 @@ export class StudioExtension implements Closable {
       this.modelsManager,
       this.catalogManager,
       this.playgroundManager,
-      ...disposables
+      ...disposables,
     ];
     toDispose.forEach(disposable => disposable.dispose());
   }

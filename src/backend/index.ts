@@ -1,2 +1,2 @@
-export type {Closable} from './closable';
-export {Server} from './server';
+export type { Closable } from './closable';
+export { Server } from './server';

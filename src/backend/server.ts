@@ -1,20 +1,19 @@
-import {Emitter, Event, Webview} from '@podman-desktop/api';
-import {IMessage, isMessageRequest} from '@shared/messages/MessageProxy';
+import { Emitter, Event, Webview } from '@podman-desktop/api';
+import { IMessage, isMessageRequest } from '@shared/messages/MessageProxy';
 import express from 'express';
-import {Buffer} from 'node:buffer';
+import { Buffer } from 'node:buffer';
 import console from 'node:console';
-import {Server as HttpServer} from 'node:http';
-import {ViteDevServer} from 'vite';
-import {WebSocketServer, WebSocket} from 'ws';
-import {Closable} from './closable';
-import {StudioExtension} from './studio-extension';
-import {ProxyServer} from '../';
+import { Server as HttpServer } from 'node:http';
+import { ViteDevServer } from 'vite';
+import { WebSocketServer, WebSocket } from 'ws';
+import { Closable } from './closable';
+import { StudioExtension } from './studio-extension';
+import { ProxyServer } from '../';
 
 // TODO: need to use the container port, can't use the AI LAB endpoint yet
 const AI_LAB_API_TARGET_URL = 'http://192.168.5.12:51780';
 
 export class Server implements Webview, Closable {
-
   private readonly studioExtension: StudioExtension;
   private readonly app: express.Express;
   private readonly connections: WebSocket[];
@@ -35,7 +34,7 @@ export class Server implements Webview, Closable {
     this.app.use(express.json());
     this.app.use(frontendServer.middlewares);
     this.connections = [];
-    this.ollamaProxy = new ProxyServer()
+    this.ollamaProxy = new ProxyServer();
     this.aiLabProxy = new ProxyServer(undefined, AI_LAB_API_TARGET_URL);
     this.#onDidReceiveMessage = new Emitter<unknown>();
     this.onDidReceiveMessage = this.#onDidReceiveMessage.event;
@@ -52,12 +51,9 @@ export class Server implements Webview, Closable {
   async init(): Promise<void> {
     await this.ollamaProxy.start();
     await this.aiLabProxy.start();
-    await this.studioExtension.init(
-      this.ollamaProxy.address().port,
-      this.aiLabProxy.address().port
-    );
+    await this.studioExtension.init(this.ollamaProxy.address().port, this.aiLabProxy.address().port);
     this.server = this.app.listen(this.port);
-    this.webSocketServer = new WebSocketServer({server: this.server});
+    this.webSocketServer = new WebSocketServer({ server: this.server });
     this.webSocketServer.on('connection', this.onConnection.bind(this));
     console.log(`Backend server started, listening on port ${this.port}`);
   }
@@ -73,14 +69,13 @@ export class Server implements Webview, Closable {
       await this.webSocketServer.close();
     }
     if (this.server) {
-      await new Promise<void>(
-        (resolve) => {
-          this.server.closeAllConnections();
-          this.server.close(() => {
-            console.log('Express server closed');
-            resolve();
-          });
+      await new Promise<void>(resolve => {
+        this.server.closeAllConnections();
+        this.server.close(() => {
+          console.log('Express server closed');
+          resolve();
         });
+      });
     }
     console.log('Backend server closed');
   }
@@ -114,25 +109,28 @@ export class Server implements Webview, Closable {
         result = await result;
       }
       this.connections.forEach(ws => {
-        ws.send(JSON.stringify({
-          id: message.id,
-          channel: message.channel,
-          method: message.method,
-          body: result,
-          status: 'success',
-        } as IMessage));
+        ws.send(
+          JSON.stringify({
+            id: message.id,
+            channel: message.channel,
+            method: message.method,
+            body: result,
+            status: 'success',
+          } as IMessage),
+        );
       });
     } catch (error: unknown) {
       this.connections.forEach(ws => {
-        ws.send(JSON.stringify({
-          id: message.id,
-          channel: message.channel,
-          method: message.method,
-          body: error,
-          status: 'error',
-        } as IMessage));
+        ws.send(
+          JSON.stringify({
+            id: message.id,
+            channel: message.channel,
+            method: message.method,
+            body: error,
+            status: 'error',
+          } as IMessage),
+        );
       });
     }
   }
-
 }

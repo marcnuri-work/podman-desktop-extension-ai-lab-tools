@@ -1,9 +1,9 @@
-import path, {join} from 'node:path';
+import path, { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import {createServer, ViteDevServer} from 'vite';
+import { createServer, ViteDevServer } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import tailwindcss from '@tailwindcss/vite';
-import {Server} from './backend';
+import { Server } from './backend';
 
 const __dirname: string = fileURLToPath(new URL('.', import.meta.url));
 const port: number = 5173;
@@ -19,10 +19,12 @@ process.on('SIGINT', () => {
   console.log('SIGINT received, closing server...');
   const closing: Promise<void>[] = [];
   if (frontendServer) {
-    closing.push((async () => {
-      await frontendServer.close();
-      console.log('Frontend server closed');
-    })());
+    closing.push(
+      (async () => {
+        await frontendServer.close();
+        console.log('Frontend server closed');
+      })(),
+    );
   }
   if (backendServer) {
     closing.push(backendServer.close());
@@ -63,10 +65,7 @@ const start = async () => {
       middlewareMode: true,
       fs: {
         strict: true,
-        allow: [
-          root,
-          '/home/user/00-MN/projects/forks/podman-desktop-extension-ai-lab'
-        ]
+        allow: [root, '/home/user/00-MN/projects/forks/podman-desktop-extension-ai-lab'],
       },
       open: false,
       hmr: {
@@ -80,10 +79,9 @@ const start = async () => {
 
   backendServer = new Server(root, port, frontendServer);
   await backendServer.init();
-}
+};
 
-start()
-  .catch(e => {
-    console.error('Error starting server:', e);
-    process.exit(1);
-  });
+start().catch(e => {
+  console.error('Error starting server:', e);
+  process.exit(1);
+});

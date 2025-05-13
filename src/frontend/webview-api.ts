@@ -1,7 +1,6 @@
-import {isMessageRequest} from '@shared/messages/MessageProxy';
+import { isMessageRequest } from '@shared/messages/MessageProxy';
 
 export class WebviewApi {
-
   private readonly interval: number = 200;
   private readonly sessionStorageKey = 'podman-desktop';
   private readonly queue: string[] = [];
@@ -24,7 +23,7 @@ export class WebviewApi {
       event['data'] = JSON.parse(wsEvent.data);
       console.log(event['data']);
       window.dispatchEvent(event);
-    }
+    };
     return webSocket;
   }
 
@@ -62,11 +61,10 @@ export class WebviewApi {
       return JSON.parse(state);
     }
     return {};
-  };
+  }
 
   public async setState(newState: unknown): Promise<void> {
     console.log('setState', newState);
     sessionStorage.setItem(this.sessionStorageKey, JSON.stringify(newState));
-  };
+  }
 }
-

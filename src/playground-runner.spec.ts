@@ -1,19 +1,17 @@
-import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest';
-import {NoOpTelemetryLogger, StandaloneWebview} from '@podman-desktop/api';
-import type {InferenceServer} from '@shared/models/IInference';
-import type {ModelInfo} from '@shared/models/IModelInfo';
-import {RpcExtension} from '@shared/messages/MessageProxy';
-import type {ModelOptions} from '@shared/models/IModelOptions';
-import type {ChatMessage} from '@shared/models/IPlaygroundMessage';
-import {McpServerManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/playground/McpServerManager';
-import {PlaygroundV2Manager} from 'podman-desktop-extension-ai-lab-backend/src/managers/playgroundV2Manager';
-import {InferenceManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/inference/inferenceManager';
-import {TaskRegistry} from 'podman-desktop-extension-ai-lab-backend/src/registries/TaskRegistry';
-import {
-  CancellationTokenRegistry,
-} from 'podman-desktop-extension-ai-lab-backend/src/registries/CancellationTokenRegistry';
-import {ProxyServer} from './';
-import {fileURLToPath} from 'node:url';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { NoOpTelemetryLogger, StandaloneWebview } from '@podman-desktop/api';
+import type { InferenceServer } from '@shared/models/IInference';
+import type { ModelInfo } from '@shared/models/IModelInfo';
+import { RpcExtension } from '@shared/messages/MessageProxy';
+import type { ModelOptions } from '@shared/models/IModelOptions';
+import type { ChatMessage } from '@shared/models/IPlaygroundMessage';
+import { McpServerManager } from 'podman-desktop-extension-ai-lab-backend/src/managers/playground/McpServerManager';
+import { PlaygroundV2Manager } from 'podman-desktop-extension-ai-lab-backend/src/managers/playgroundV2Manager';
+import { InferenceManager } from 'podman-desktop-extension-ai-lab-backend/src/managers/inference/inferenceManager';
+import { TaskRegistry } from 'podman-desktop-extension-ai-lab-backend/src/registries/TaskRegistry';
+import { CancellationTokenRegistry } from 'podman-desktop-extension-ai-lab-backend/src/registries/CancellationTokenRegistry';
+import { ProxyServer } from './';
+import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const __dirname: string = fileURLToPath(new URL('.', import.meta.url));
@@ -38,7 +36,7 @@ describe('Playground Runner', () => {
       new TaskRegistry(rpcExtension),
       new NoOpTelemetryLogger(),
       new CancellationTokenRegistry(),
-      mcpServerManager
+      mcpServerManager,
     );
     await vi.waitFor(() => expect(mcpServerManager.getMcpSettings()?.servers?.time).not.toBeUndefined());
   });
@@ -90,14 +88,16 @@ describe('Playground Runner', () => {
       //     'The user will respond with the output of the tool execution response so you can continue with the rest of the initial user prompt (continue).\n' +
       //     'If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.',
       // );
-      await manager.submit(conversationId,
+      await manager.submit(
+        conversationId,
         // 'List my Podman images and then my Podman containers',
         'Get the time in the Paris Timezone',
         {
           temperature: 0.1337,
           max_tokens: 1337,
           top_p: 0,
-        } as ModelOptions);
+        } as ModelOptions,
+      );
       await vi.waitFor(
         () => {
           const conversations = manager.getConversations();

@@ -1,14 +1,9 @@
-import {CatalogManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/catalogManager';
-import {PlaygroundV2Manager} from 'podman-desktop-extension-ai-lab-backend/src/managers/playgroundV2Manager';
-import {type McpServerManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/playground/McpServerManager';
-import type {
-  AssistantChat,
-  SystemPrompt,
-  UserChat
-} from '@shared/models/IPlaygroundMessage';
+import { CatalogManager } from 'podman-desktop-extension-ai-lab-backend/src/managers/catalogManager';
+import { PlaygroundV2Manager } from 'podman-desktop-extension-ai-lab-backend/src/managers/playgroundV2Manager';
+import { type McpServerManager } from 'podman-desktop-extension-ai-lab-backend/src/managers/playground/McpServerManager';
+import type { AssistantChat, SystemPrompt, UserChat } from '@shared/models/IPlaygroundMessage';
 
 export class ExtendedPlaygroundManager extends PlaygroundV2Manager {
-
   constructor(
     private catalogManager: CatalogManager,
     rpcExtension: any,
@@ -18,18 +13,15 @@ export class ExtendedPlaygroundManager extends PlaygroundV2Manager {
     cancellationTokenRegistry: any,
     mcpServerManager: McpServerManager,
   ) {
-    super(
-      rpcExtension,
-      inferenceManager,
-      taskRegistry,
-      telemetryLogger,
-      cancellationTokenRegistry,
-      mcpServerManager,
-    );
+    super(rpcExtension, inferenceManager, taskRegistry, telemetryLogger, cancellationTokenRegistry, mcpServerManager);
   }
 
   async initTestData(): Promise<void> {
-    const conversationId = await this.createPlayground('Playground 001', this.catalogManager.getModels()[0], 'playground-001');
+    const conversationId = await this.createPlayground(
+      'Playground 001',
+      this.catalogManager.getModels()[0],
+      'playground-001',
+    );
     const conversation = this.getConversations().find(c => c.id === conversationId);
     conversation.messages.push(
       {
@@ -56,10 +48,13 @@ export class ExtendedPlaygroundManager extends PlaygroundV2Manager {
         id: '1-5',
         role: 'assistant',
         content: {
-          type: 'tool-call', toolCallId: '1-7', toolName: 'weather', args: { location: 'Don Benito' },
+          type: 'tool-call',
+          toolCallId: '1-7',
+          toolName: 'weather',
+          args: { location: 'Don Benito' },
           result: {
-            content: [{type: 'text', text: 'The weather in Don Benito is sunny with a temperature of 25°C.'}],
-          }
+            content: [{ type: 'text', text: 'The weather in Don Benito is sunny with a temperature of 25°C.' }],
+          },
         },
         completed: Date.now() - 2000,
         timestamp: Date.now() - 2500,
@@ -74,18 +69,20 @@ export class ExtendedPlaygroundManager extends PlaygroundV2Manager {
         id: '1-7',
         role: 'assistant',
         content: {
-          type: 'tool-call', toolCallId: '1-7', toolName: 'weather', args: { location: 'Porto' },
+          type: 'tool-call',
+          toolCallId: '1-7',
+          toolName: 'weather',
+          args: { location: 'Porto' },
         },
         timestamp: Date.now() - 2000,
-      } as AssistantChat
+      } as AssistantChat,
     );
     conversation.usage = {
       completion_tokens: 37,
-        prompt_tokens: 13,
+      prompt_tokens: 13,
     };
     for (const model of this.catalogManager.getModels()) {
       await this.createPlayground(`Empty and ready (${model.id})`, model, `empty-and-ready-${model.id}`);
-
     }
   }
 }

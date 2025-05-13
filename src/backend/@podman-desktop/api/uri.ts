@@ -1,5 +1,4 @@
 export interface Uri {
-
   readonly scheme: string;
   readonly authority: string;
   readonly path: string;
@@ -7,18 +6,12 @@ export interface Uri {
   readonly query: string;
   readonly fragment: string;
 
-  with(change: {
-    scheme?: string;
-    authority?: string;
-    path?: string;
-    query?: string;
-    fragment?: string;
-  }): Uri;
+  with(change: { scheme?: string; authority?: string; path?: string; query?: string; fragment?: string }): Uri;
 
   toString(): string;
 }
 
-export class UriImpl implements Uri{
+export class UriImpl implements Uri {
   constructor(
     private _scheme: string,
     private _authority: string,
@@ -35,7 +28,13 @@ export class UriImpl implements Uri{
       // remove the ? character
       updatedSearch = search.substring(1);
     }
-    return new UriImpl(url.protocol.substring(0, url.protocol.length - 1), url.host, url.pathname, updatedSearch, url.hash);
+    return new UriImpl(
+      url.protocol.substring(0, url.protocol.length - 1),
+      url.host,
+      url.pathname,
+      updatedSearch,
+      url.hash,
+    );
   }
 
   static file(path: string): Uri {

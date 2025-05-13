@@ -1,4 +1,4 @@
-import {WebviewApi} from './webview-api';
+import { WebviewApi } from './webview-api';
 
 Object.defineProperty(window, 'acquirePodmanDesktopApi', {
   value: () => {

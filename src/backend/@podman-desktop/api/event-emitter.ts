@@ -1,7 +1,6 @@
-import {Disposable} from '@podman-desktop/api';
+import { Disposable } from '@podman-desktop/api';
 
 export class EventEmitter<T> {
-
   private listeners: ((e: T) => any)[] = [];
   public event = this.eventInternal.bind(this);
 
@@ -21,9 +20,9 @@ export class EventEmitter<T> {
         console.error('Error in event listener', err);
       }
     }
-  };
+  }
 
   dispose(): void {
     this.listeners.length = 0;
-  };
+  }
 }

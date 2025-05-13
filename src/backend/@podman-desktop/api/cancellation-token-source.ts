@@ -1,7 +1,6 @@
-import {CancellationToken} from '@podman-desktop/api';
+import { CancellationToken } from '@podman-desktop/api';
 
 export class CancellationTokenSource {
-
   private _token?: CancellationToken = undefined;
 
   get token(): CancellationToken {

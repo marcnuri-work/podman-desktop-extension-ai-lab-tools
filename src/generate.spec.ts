@@ -1,9 +1,9 @@
-import {createOpenAICompatible} from '@ai-sdk/openai-compatible';
-import {afterEach, beforeEach, describe, test} from 'vitest';
-import {generateText, simulateStreamingMiddleware, streamText, wrapLanguageModel} from 'ai';
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+import { afterEach, beforeEach, describe, test } from 'vitest';
+import { generateText, simulateStreamingMiddleware, streamText, wrapLanguageModel } from 'ai';
 import { type McpClient, type McpServer, McpServerType } from '@shared/models/McpSettings';
-import {toMcpClients} from 'podman-desktop-extension-ai-lab-backend/src/utils/mcpUtils';
-import {ProxyServer} from './';
+import { toMcpClients } from 'podman-desktop-extension-ai-lab-backend/src/utils/mcpUtils';
+import { ProxyServer } from './';
 
 const MODEL_NAME = 'granite3.3:latest';
 const SYSTEM_PROMPT =

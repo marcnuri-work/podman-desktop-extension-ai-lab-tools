@@ -1,11 +1,11 @@
-import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {StandaloneWebview} from '@podman-desktop/api';
-import {RpcExtension} from '@shared/messages/MessageProxy';
-import {McpServerType} from '@shared/models/McpSettings';
-import {McpServerManager} from 'podman-desktop-extension-ai-lab-backend/src/managers/playground/McpServerManager';
+import { StandaloneWebview } from '@podman-desktop/api';
+import { RpcExtension } from '@shared/messages/MessageProxy';
+import { McpServerType } from '@shared/models/McpSettings';
+import { McpServerManager } from 'podman-desktop-extension-ai-lab-backend/src/managers/playground/McpServerManager';
 
 describe('McpServerManager', () => {
   let consoleErrors: string;
@@ -25,23 +25,23 @@ describe('McpServerManager', () => {
       consoleWarnings += args.join(' ') + '\n';
     });
     rpcExtension = new RpcExtension(new StandaloneWebview());
-    appUserDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'mcp-server-manager-test-'))
+    appUserDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'mcp-server-manager-test-'));
     mcpSettingsFile = path.join(appUserDirectory, 'mcp-settings.json');
     mcpServerManager = new McpServerManager(rpcExtension, appUserDirectory);
   });
   afterEach(async () => {
-    await fs.promises.rm(appUserDirectory, {recursive: true});
+    await fs.promises.rm(appUserDirectory, { recursive: true });
   });
   test('provides an empty default value', () => {
-    expect(mcpServerManager.getMcpSettings()).toEqual({servers: {}});
+    expect(mcpServerManager.getMcpSettings()).toEqual({ servers: {} });
   });
   describe('with missing mcp-settings.json', () => {
     beforeEach(async () => {
       mcpServerManager.init();
     });
     test('provides an empty default value', () => {
-      expect(mcpServerManager.getMcpSettings()).toEqual({servers: {}});
-    })
+      expect(mcpServerManager.getMcpSettings()).toEqual({ servers: {} });
+    });
     test('logs error', () => {
       expect(consoleErrors).toMatch(/unable to watch file/);
       expect(consoleErrors).toMatch(/changes won't be detected/);
@@ -53,7 +53,7 @@ describe('McpServerManager', () => {
       mcpServerManager.init();
     });
     test('provides an empty default value', () => {
-      expect(mcpServerManager.getMcpSettings()).toEqual({servers: {}});
+      expect(mcpServerManager.getMcpSettings()).toEqual({ servers: {} });
     });
     test('logs error', async () => {
       await vi.waitFor(() => expect(consoleErrors).not.toBe(''));
@@ -61,11 +61,14 @@ describe('McpServerManager', () => {
     });
     describe('with mcp-settings.json file modified', () => {
       beforeEach(async () => {
-        await fs.promises.writeFile(mcpSettingsFile, JSON.stringify({
-          servers: {
-            'stdio-ok': {type: 'stdio', enabled: true, command: 'sh -c'},
-          },
-        }));
+        await fs.promises.writeFile(
+          mcpSettingsFile,
+          JSON.stringify({
+            servers: {
+              'stdio-ok': { type: 'stdio', enabled: true, command: 'sh -c' },
+            },
+          }),
+        );
         await vi.waitFor(() => expect(mcpServerManager.getMcpSettings().servers).not.toEqual({}));
       });
       test('loads valid servers', () => {
@@ -126,7 +129,7 @@ describe('McpServerManager', () => {
             name: 'sse-ok',
             type: McpServerType.SSE,
             url: 'https://echo.example.com/sse',
-            headers: {foo: 'bar'},
+            headers: { foo: 'bar' },
           },
         }),
       );

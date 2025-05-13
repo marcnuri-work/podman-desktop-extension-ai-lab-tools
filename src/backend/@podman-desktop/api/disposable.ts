@@ -1,8 +1,7 @@
 export class Disposable {
-
   private disposable?: undefined | (() => void);
 
-  constructor(func: () => void){
+  constructor(func: () => void) {
     this.disposable = func;
   }
 

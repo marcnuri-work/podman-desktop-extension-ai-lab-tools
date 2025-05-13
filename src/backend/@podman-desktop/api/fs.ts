@@ -1,6 +1,5 @@
 import * as nodeFs from 'node:fs';
-import {type Disposable, Emitter, type Event, type Uri, UriImpl, disposables} from '@podman-desktop/api';
-
+import { type Disposable, Emitter, type Event, type Uri, UriImpl, disposables } from '@podman-desktop/api';
 
 const createFileSystemWatcher: (path: string) => FileSystemWatcher = path => {
   const fsw = new FileSystemWatcher(path);
@@ -9,7 +8,6 @@ const createFileSystemWatcher: (path: string) => FileSystemWatcher = path => {
 };
 
 export class FileSystemWatcher implements Disposable {
-
   private readonly _onDidChange: Emitter<Uri>;
   private readonly _onDidCreate: Emitter<Uri>;
   private readonly _onDidDelete: Emitter<Uri>;
@@ -18,10 +16,7 @@ export class FileSystemWatcher implements Disposable {
   public readonly onDidDelete: Event<Uri>;
   private readonly fsWatcher: nodeFs.FSWatcher;
 
-
-  constructor(
-    private readonly path: string,
-  ) {
+  constructor(private readonly path: string) {
     this._onDidChange = new Emitter<Uri>();
     this._onDidCreate = new Emitter<Uri>();
     this._onDidDelete = new Emitter<Uri>();

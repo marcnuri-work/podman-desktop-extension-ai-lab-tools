@@ -1,1 +1,1 @@
-export {ProxyServer} from './proxy-server';
+export { ProxyServer } from './proxy-server';

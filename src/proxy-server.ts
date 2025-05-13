@@ -1,24 +1,24 @@
 import express from 'express';
-import {Server} from 'node:http';
-import {AddressInfo} from 'node:net';
-import {createProxyMiddleware} from 'http-proxy-middleware';
-import {Closable} from './backend';
+import { Server } from 'node:http';
+import { AddressInfo } from 'node:net';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import { Closable } from './backend';
 
 const DEFAULT_TARGET_URL = 'http://192.168.5.12:11434';
 
 export class ProxyServer implements Closable {
   private readonly app: express.Express;
-  private server: Server
+  private server: Server;
 
   constructor(
     private port?: number,
-    private targetUrl: string = DEFAULT_TARGET_URL
+    private targetUrl: string = DEFAULT_TARGET_URL,
   ) {
     this.app = express();
     const proxyOptions = {
       target: targetUrl,
       changeOrigin: true,
-      logLevel: 'debug'
+      logLevel: 'debug',
     };
     this.app.use('/', createProxyMiddleware(proxyOptions));
   }
@@ -58,4 +58,3 @@ export class ProxyServer implements Closable {
     return this.server.address() as AddressInfo;
   }
 }
-
