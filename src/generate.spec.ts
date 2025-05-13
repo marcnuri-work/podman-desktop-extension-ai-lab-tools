@@ -1,11 +1,7 @@
 import {createOpenAICompatible} from '@ai-sdk/openai-compatible';
 import {afterEach, beforeEach, describe, test} from 'vitest';
 import {generateText, simulateStreamingMiddleware, streamText, wrapLanguageModel} from 'ai';
-import {
-  type McpClient,
-  type McpServer,
-  McpServerType,
-} from 'podman-desktop-extension-ai-lab-backend/src/models/mcpTypes';
+import { type McpClient, type McpServer, McpServerType } from '@shared/models/McpSettings';
 import {toMcpClients} from 'podman-desktop-extension-ai-lab-backend/src/utils/mcpUtils';
 import {ProxyServer} from './';
 
