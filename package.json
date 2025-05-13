@@ -9,7 +9,8 @@
     "format:fix": "prettier --config ./node_modules/podman-desktop-extension-ai-lab-parent/.prettierrc --write \"**/src/**/*.{ts,svelte}\"",
     "frontend:watch": "vite -c vite.frontend.config.js",
     "prestart": "node -e \"if (parseInt(process.versions.node.split('.')[0]) !== 20) { console.error('Error: Node.js version 20 is required.'); process.exit(1); }\"",
-    "start": "tsx --loader ./util/mustache-loader.js ./src/server-runner.ts"
+    "start": "tsx --loader ./util/mustache-loader.js ./src/server-runner.ts",
+    "test": "vitest run -r src/__tests__ --passWithNoTests"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "0.2.13",
