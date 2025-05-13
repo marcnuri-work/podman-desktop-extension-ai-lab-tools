@@ -12,6 +12,13 @@ import {
   CancellationTokenRegistry,
 } from 'podman-desktop-extension-ai-lab-backend/src/registries/CancellationTokenRegistry';
 import {ProxyServer} from './';
+import {fileURLToPath} from 'node:url';
+import path from 'node:path';
+import {
+  McpServerManager
+} from '../../../forks/podman-desktop-extension-ai-lab/packages/backend/src/managers/playground/McpServerManager';
+
+const __dirname: string = fileURLToPath(new URL('.', import.meta.url));
 
 describe('Playground Runner', () => {
   let manager: PlaygroundV2Manager;
@@ -24,14 +31,17 @@ describe('Playground Runner', () => {
     const rpcExtension = new RpcExtension(undefined);
     // @ts-ignore
     inferenceManager = new InferenceManager() as unknown as InferenceManager;
+    const mcpServerManager = new McpServerManager(rpcExtension, path.join(__dirname, '..'));
+    mcpServerManager.init();
     manager = new PlaygroundV2Manager(
-      '/home/user/.local/share/containers/podman-desktop/extensions-storage/redhat.ai-lab',
       rpcExtension,
       inferenceManager,
       new TaskRegistry(rpcExtension),
       new NoOpTelemetryLogger(),
       new CancellationTokenRegistry(),
+      mcpServerManager
     );
+    await vi.waitFor(() => expect(mcpServerManager.getMcpSettings()?.servers?.time).not.toBeUndefined());
   });
 
   afterEach(async () => {
