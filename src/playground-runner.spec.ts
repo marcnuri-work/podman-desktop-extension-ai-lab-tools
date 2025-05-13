@@ -1,5 +1,5 @@
 import {afterEach, beforeEach, describe, expect, test, vi} from 'vitest';
-import {NoOpTelemetryLogger} from '@podman-desktop/api';
+import {NoOpTelemetryLogger, StandaloneWebview} from '@podman-desktop/api';
 import type {InferenceServer} from '@shared/models/IInference';
 import type {ModelInfo} from '@shared/models/IModelInfo';
 import {RpcExtension} from '@shared/messages/MessageProxy';
@@ -28,7 +28,8 @@ describe('Playground Runner', () => {
   beforeEach(async () => {
     proxyServer = new ProxyServer();
     await proxyServer.start();
-    const rpcExtension = new RpcExtension(undefined);
+    const rpcExtension = new RpcExtension(new StandaloneWebview());
+    rpcExtension.init();
     // @ts-ignore
     inferenceManager = new InferenceManager() as unknown as InferenceManager;
     const mcpServerManager = new McpServerManager(rpcExtension, path.join(__dirname, '..'));

@@ -10,7 +10,7 @@ export {fs} from './fs';
 export {NoOpTelemetryLogger, type TelemetryLogger} from './telemetry-logger';
 export {TelemetryTrustedValue} from './telemetry-trusted-value';
 export {type Uri, UriImpl} from './uri';
-export type {Webview} from './webview';
+export {StandaloneWebview, type Webview} from './webview';
 export type {WebviewOptions} from './webview-options';
 
 export const disposables: DisposableImpl[] = [];
