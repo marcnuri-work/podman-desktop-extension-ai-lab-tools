@@ -7,12 +7,23 @@ on:
         - main
 
 jobs:
-  if: false # disables until we implement checkout of AI Lab
   checks:
     name: Run checks
     runs-on: 'ubuntu-latest'
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Tools
+        uses: actions/checkout@v4
+      - name: Checkout AI Lab
+        uses: actions/checkout@v4
+        with:
+          repository: containers/podman-desktop-extension-ai-lab
+          path: podman-desktop-extension-ai-lab
+      - name: Link podman-desktop-extension-ai-lab in forks
+        # Location of the podman-desktop-extension-ai-lab repo must match the location in my local machine
+        # See package.json
+        run: |
+          mkdir -p ../../forks
+          ln -s $(pwd)/podman-desktop-extension-ai-lab ../../forks/podman-desktop-extension-ai-lab
       - uses: pnpm/action-setup@v4
         with:
           version: latest
