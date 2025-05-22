@@ -36,7 +36,7 @@ export class ProxyServer implements Closable {
     });
     return new Promise<void>(resolve => {
       this.server = this.app.listen(this.port, () => {
-        console.log(`Reverse proxy server started on port ${this.port}`);
+        console.log(`Reverse proxy server started on port ${this.server.address()['port']}`);
         console.log(`Forwarding requests to: ${this.targetUrl}`);
         resolve();
       });

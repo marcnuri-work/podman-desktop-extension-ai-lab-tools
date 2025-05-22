@@ -12,6 +12,7 @@ import type { ModelInfo } from '@shared/models/IModelInfo';
 import type { ModelOptions } from '@shared/models/IModelOptions';
 import type { Conversation } from '@shared/models/IPlaygroundMessage';
 import type { Task } from '@shared/models/ITask';
+import type { McpSettings } from '@shared/models/McpSettings';
 import { RpcExtension } from 'podman-desktop-extension-ai-lab-shared/src/messages/MessageProxy';
 import { ModelsManager } from 'podman-desktop-extension-ai-lab-backend/src/managers/modelsManager';
 import { McpServerManager } from 'podman-desktop-extension-ai-lab-backend/src/managers/playground/McpServerManager';
@@ -96,6 +97,10 @@ export class StudioExtension implements Closable {
 
   public getInferenceServers(): InferenceServer[] {
     return this.inferenceManager.getServers();
+  }
+
+  public getMcpSettings(): McpSettings {
+    return this.mcpServerManager.getMcpSettings();
   }
 
   public getModelsInfo(): ModelInfo[] {
